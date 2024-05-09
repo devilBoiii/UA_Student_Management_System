@@ -1,0 +1,1216 @@
+{% extends 'layouts/subject_teacherMain.html' %}
+{% block title %} Student Management System {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css"
+    type="text/css" />
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css"
+    type="text/css" />
+<link href="../static/vendor/formValidation/tachyons.min.css" type="text/css" rel="stylesheet" />
+<link href="../static/vendor/formValidation/formValidation.min.css" type="text/css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    .table th,
+    .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    #indiMarksTable {
+        margin-bottom: 20px;
+        /* Adjust the value as needed */
+    }
+
+    #resultmarksList {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    #resultmarksList th,
+    #resultmarksList td {
+        border: 1px solid black;
+        padding: 8px;
+        vertical-align: middle;
+    }
+
+    #stdmarks {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    #stdmarks th,
+    #stdmarks td {
+        border: 1px solid black;
+        padding: 8px;
+        vertical-align: middle;
+    }
+
+    .col-subject {
+        width: 2%;
+    }
+
+    .col-term1 {
+        width: 6%;
+    }
+
+    .col-term2 {
+        width: 6%;
+    }
+
+    .col-grandTotal {
+        width: 2%;
+    }
+
+    .col-ca1,
+    .col-ca2,
+    .col-midterm,
+    .col-annual,
+    .col-total2,
+    .col-total1 {
+        width: 2%;
+    }
+    .form-check .form-check-label {
+    display: inline-block; /* Ensure inline-block to avoid text wrapping */
+    transform: rotate(90deg);
+    }
+    table, thead, tbody, td, th{
+    text-align: center;
+    border: 1px solid black;
+    width: 800px;
+    }
+    .dataTables_info, .pagination, .dataTables_length, #customerList_filter{
+        display: none;
+    }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Evaluate Student</h4>
+                        <hr>
+                        <div class="pos-rel">
+                            <!-- Nav pills -->
+                            <ul class="nav nav-pills justify-content-center nav-justified" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active btn btn-primary" data-toggle="pill"
+                                        href="#studentDetail">Student Detail</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link btn btn-primary" data-toggle="pill"
+                                        href="#termrating">Term Rating </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link btn btn-primary" data-toggle="pill" href="#marks_std">Enter
+                                        Marks</a>
+                                <li class="nav-item">
+                                    <a class="nav-link btn btn-primary" data-toggle="pill" href="#marks_view">View
+                                        Marks</a>
+                                </li>
+                                </li>
+                            </ul>
+                            <div class="connected-line"></div>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div id="studentDetail" class="container tab-pane active">
+                                    <div class="container mt-0">
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col-md-7">
+                                                <div class="card p-3 py-1">
+                                                    <div class="text-center">
+                                                        <a href="{{ std.half_photo }}" class="image-popup"
+                                                            title="Passport Size Photo">
+                                                            <img src="{{ std.half_photo }}" width="150px"
+                                                                height="140px" class="rounded-circle">
+                                                        </a>
+                                                        <p>Student Photo</p>
+                                                    </div>
+                                                    <div class="text-center mt-3">
+                                                        <span class="bg-secondary p-1 px-4 rounded text-white">
+                                                            {{std.first_name}}
+                                                            {{std.last_name}}</span>
+                                                        <div class="px-4 mt-1"> <br>
+                                                            <p><b>Student CID:</b> <span id="'stdCid">{{std.student_cid}}</span></p>
+                                                            <p><b>Index Number:</b><span id="indexNo"> {{std.student_code}}</span></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="termrating" class="container tab-pane">
+                                    <form action="/termrating/{{std.id}}" method="POST" id="termrate" onsubmit="termrating('{{std.id}}'); return false;">
+                                        <input type="hidden" name="sub_id" value="{{current_user.id}}">
+                                        <input type="hidden" name="std_id" id="std_id" value="{{std.id}}">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Key</th>
+                                                    <th>1</th>
+                                                    <th>2</th>
+                                                    <th>3</th>
+                                                    <th>4</th>
+                                                    <th>5</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Values</td>
+                                                    <td>Begining</td>
+                                                    <td>Approaching</td>
+                                                    <td>Meeting	</td>
+                                                    <td>Advancing</td>
+                                                    <td>Exceeding</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5 class="font-weight-bold mb-4">Term 1</h5>
+                                                    <br><br>
+                                                    <div class="form-group row" id="termratingScales1" >
+                                                        <label class="control-label col-sm-4 text-right">Rating Scale (Block 1):</label>
+                                                        <div class="col-sm-8" id="termratingScale1Options" style="transform: rotate(-90deg); margin-top: -200px">
+                                                        </div>
+                                                    </div>
+                                                    <br> <br> <br><br><br>      
+                                                    <br> <br>                                      
+                                
+                                                    <div class="form-group row" id="termratingScales2" style="display: none;">
+                                                        <label class="control-label col-sm-4 text-right">Rating Scale (Block 2):</label>
+                                                        <div class="col-sm-8" id="termratingScale2Options" style="transform: rotate(-90deg); margin-top: -200px; margin-left: 100px;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                
+                                                <div class="col-md-6">
+                                                    <div class="form-group row" id="termratingScales3" style="display: none;">
+                                                        <h5 class="font-weight-bold mb-4">Term 2</h5>
+                                                    <br><br>
+                                                        <label class="control-label col-sm-4 text-right">Rating Scale (Block 1):</label>
+                                                        <div class="col-sm-8" id="termratingScale3Options" style="transform: rotate(-90deg); margin-top: -230px; margin-left: 100px;">
+                                                        </div>
+                                                    </div>
+                                                    <br> <br> <br><br><br>      
+                                                    <br> <br> 
+                                
+                                                    <div class="form-group row" id="termratingScales4" style="display: none; margin-top: 30px">
+                                                        <label class="control-label col-sm-4 text-right">Rating Scale (Block 2):</label>
+                                                        <div class="col-sm-8" id="termratingScale4Options" style="transform: rotate(-90deg); margin-left: 100px;margin-top: -200px">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                
+                                        <div class="button-center text-center">
+                                            <button type="submit" class="btn-sm btn-primary" style="color: white; width: 101px; height: 40px; font-size: 16px;" onclick="handleFormSubmit()">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="marks_std" class="container tab-pane fade">
+                                    <form action="#" method="#" id="info">
+                                        <input type="hidden" name="sub_id" value="{{current_user.id}}">
+                                        <input type="hidden" name="std_id" id="std_id" value="{{std.id}}">
+
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                            <!-- <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="class_test" class="control-label col-sm-4 text-right">Class Test 01:</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" placeholder="Enter Marks *" name="class_test_1" value="" />
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">/ 20</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>                                                    
+                                            </div> -->
+
+                                            <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="class_test" class="control-label col-sm-4 text-right">CA1:</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" placeholder="Enter CA *" name="CA1" value="" />
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">/ 15</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group row" id="ratingScales1">
+                                                    <label class="control-label col-sm-4 text-right" for="ratingScale1">Rating Scale (Midterm):</label>
+                                                    <div class="col-sm-8">
+                                                        <select name="ratingScale1" id="ratingScale1" class="form-control">
+                                                            <option value="">---Select---</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>   
+                                            </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group row">
+                                                            <label for="fname" class="control-label col-sm-4 text-right">Mid-Term Marks:</label>
+                                                            <div class="col-sm-8">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" placeholder="Mid-term marks *" name="mid_term" value="" />
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">/ 35</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group row" id="ratingScales2" >
+                                                                <label class="control-label col-sm-4 text-right" for="ratingScale2">Rating Scale (Annual):</label>
+                                                                <div class="col-sm-8">
+                                                                    <select name="ratingScale2" id="ratingScale2" class="form-control">
+                                                                        <option value="">---Select---</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                         
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                            <!-- <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="class_test" class="control-label col-sm-4 text-right">Class Test 02:</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" placeholder="Enter Marks *" name="class_test_2" value="" />
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">/ 20</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div> -->
+
+                                                <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="class_test" class="control-label col-sm-4 text-right">CA2:</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" placeholder="Enter CA *" name="CA2" value="" />
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">/ 15</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="annual_exam" class="control-label col-sm-4 text-right">Annual Exam:</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" placeholder="Annual Exam Marks *" name="annual_exam" id="annual_exam" value="" />
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">/ 35</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+
+                                                
+                                            </div>
+                                        </div>                                            
+                                            <hr>
+                                        
+                                        <div class="button-center text-center">
+                                            <button type="submit" id="sub_sent" class="btn btn-sm btn-warning"
+                                                style="color: white; width: 101px; height: 40px; font-size: 16px;">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+
+                <div class="modal fade" id="edit_Student_marks" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Edit Student Marks</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                <div id="" class="container">
+                                    <form action="/update-std-marks/{{std.id}}" method="POST" id="editForm">
+                                        <input type="hidden" name="sub_id" value="{{current_user.id}}">
+                                        <input type="hidden" name="std_id" id="std_id" value="{{std.id}}">
+
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                            <!-- <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="class_test" class="control-label col-lg-8 text-left">Class Test 01:</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group">
+                                                            <input type="text" id="editclass_test_1" class="form-control" placeholder="Enter Marks *" name="editclass_test_1" value="" />
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">/ 20</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>                                                    
+                                            </div> -->
+
+                                            <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="class_test" class="control-label col-lg-8 text-left">CA1:</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group">
+                                                            <input type="text" id="editCA1" class="form-control" placeholder="Enter CA *" name="editCA1" value="" />
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">/ 10</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group row" id="ratingScales1">
+                                                    <label class="control-label col-sm-12 text-left" for="eratingScale1">Rating Scale (Midterm):</label>
+                                                    <div class="col-sm-8">
+                                                        <select name="ratingScale1" id="eratingScale1" class="form-control">
+                                                            <option value="">---Select---</option>
+                                                        </select>
+                                                    </div> 
+                                                </div>
+                                            </div> 
+                                            </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group row">
+                                                            <label for="fname" class="control-label col-lg-8 text-left">Mid-Term Marks:</label>
+                                                            <div class="col-sm-8">
+                                                                <div class="input-group">
+                                                                    <input type="text" id="editmid_term" class="form-control" placeholder="Mid-term marks *" name="editmid_term" value="" />
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">/ 100</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                            <!-- <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="class_test" class="control-label col-lg-8 text-left">Class Test 02:</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group">
+                                                            <input type="text" id="editclass_test_2" class="form-control" placeholder="Enter Marks *" name="editclass_test_2" value="" />
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">/ 20</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div> -->
+
+                                                <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="class_test" class="control-label col-lg-8 text-left">CA2:</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group">
+                                                            <input type="text" id="editCA2" class="form-control" placeholder="Enter CA *" name="editCA2" value="" />
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">/ 10</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group row" id="eratingScales2">
+                                                        <label class="control-label col-sm-12 text-left" for="ratingScale2">Rating Scale (Annual):</label>
+                                                        <div class="col-sm-8">
+                                                            <select name="ratingScale2" id="eratingScale2" class="form-control">
+                                                                <option value="">---Select---</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                <div class="form-group row">
+                                                    <label for="annual_exam" class="control-label col-lg-8 text-left">Annual Exam:</label>
+                                                    <div class="col-sm-8">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" placeholder="Annual Exam Marks *" name="editannual_exam" id="editannual_exam" value="" />
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">/ 100</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+   
+                                    </div>
+                                        </div>                                            
+                                            <hr>
+                                        
+                                            <div class="button-center text-center">
+                                                <button type="submit" class="btn btn-sm btn-primary"
+                                                    style="color: white; width: 101px; height: 40px; font-size: 16px;">Submit</button>
+                                            </div>
+                                            
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+ 
+                                <!-- table -->
+                                <div id="marks_view" class="container tab-pane fade">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="table-responsive" id="marksTable">
+                                                <center><h6 style="text-decoration: underline;">View Marks Assigned</h6></center> 
+                                                <table class="table align-items-center table-flush" id="customerList" style="width:100%;">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th scope="col" class="sort">Subject</th>
+                                                            <th scope="col" class="sort">CA (Midterm)</th>
+                                                            <th scope="col" class="sort">Rating (Midterm)</th>
+                                                            <th scope="col" class="sort">Mid-term Exam</th>
+                                                            <th scope="col" class="sort">CA (Annual)</th>
+                                                            <th scope="col" class="sort">Rating (Annual)</th>
+                                                            <th scope="col" class="sort">Annual Exam</th>
+                                                            <th scope="col">Action</th>
+                                                        </tr>
+                                                    </thead>                                                    
+                                                </table>   
+                                                </div>
+                                                <div class="table-responsive" id="indiMarksTable" style="display: none;">
+                                                    <h6>STATEMENT OF MARKS</h6>
+                                                    <table class="table align-items-center table-flush" id="std_marks_list std_mark_list" style="width:100%;">
+                                                        <thead class="thead-light">
+                                                            <tr>
+                                                                <th scope="col" class="sort">Subject</th>
+                                                                <th scope="col" class="sort">Class Test I</th>
+                                                                <th scope="col" class="sort">CA (Midterm)</th>
+                                                                <th scope="col" class="sort">Rating (Midterm)</th>
+                                                                <th scope="col" class="sort">Mid-term Exam</th>
+                                                                <th scope="col" class="sort ">Class Test II</th>
+                                                                <th scope="col" class="sort">CA (Annual)</th>
+                                                                <th scope="col" class="sort">Rating (Annual)</th>
+                                                                <th scope="col" class="sort">Annual Exam</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <!-- <tbody>
+                                                            {% for usr in users %}
+                                                            <tr>
+                                                            <td>{{ usr.subject }}</td>
+                                                            <td>{{ usr.class_test_one }}</td>
+                                                            <td>{{ usr.ca1 }}</td>
+                                                            <td>{{ usr.ratingScale1 }}</td>
+                                                            <td>{{ usr.mid_term }}</td>
+                                                            <td>{{ usr.class_test_two }}</td>
+                                                            <td>{{ usr.ca2 }}</td>
+                                                            <td>{{ usr.ratingScale2 }}</td>
+                                                            <td>{{ usr.annual_exam }}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody> -->
+                                                    </table>
+                                                </div>
+
+                                                                                          
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end table -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Define a variable to track the number of form submissions
+var formSubmissionCount = 0;
+
+function handleFormSubmit(studentId) {
+    // Check if Term 1 Rating Scale (Block 1) is selected
+    var termratingScale1 = document.getElementById('termratingScale1Options');
+    if (termratingScale1.selectedIndex === 0) {
+        // Display an error message
+        Swal.fire({
+            title: 'Error!',
+            text: 'Please Select A Rating For Term 1 Rating Scale (Block 1).',
+            icon: 'warning',
+            animation: 'slide-from-top',
+        });
+        return false; // Prevent form submission
+    }
+    var termratingScale2 = document.getElementById('termratingScale2Options');
+    if (termratingScale1.selectedIndex === 0) {
+        // Display an error message
+        Swal.fire({
+            title: 'Error!',
+            text: 'Please Select A Rating For Term 1 Rating Scale (Block 1).',
+            icon: 'warning',
+            animation: 'slide-from-top',
+        });
+        return false; // Prevent form submission
+    }
+
+    // Check if any of the other rating scale options for Term 1 are not selected
+    if (!areOptionsSelected('termratingScale1Options')) {
+        // Display an error message
+        Swal.fire({
+            title: 'Error!',
+            text: 'Please Select A Rating For Term 1 Rating Scale (Block 1).',
+            icon: 'warning',
+            animation: 'slide-from-top',
+        });
+        return false; // Prevent form submission
+    }
+
+    // Increment the form submission count
+    formSubmissionCount++;
+
+    // Customize the success message based on the form submission count
+    var successMessage = (formSubmissionCount === 1) ? 'Successfully Updated The Forms!' : 'Forms Updated!';
+
+    // Display the success message using Swal
+    Swal.fire({
+        title: '',
+        text: successMessage,
+        icon: 'success',
+        animation: 'slide-from-top',
+    });
+
+    // Show the hidden Term 2 Rating Scale (Block 1) after the first submit
+    if (formSubmissionCount === 2) {
+        document.getElementById('termratingScales3').style.display = 'block';
+        
+    }if (formSubmissionCount === 3) {
+        document.getElementById('termratingScales4').style.display = 'block';
+    }
+
+    // Show the hidden Term 1 Rating Scale (Block 2) after each submit
+    document.getElementById('termratingScales2').style.display = 'block';
+
+    // Your existing form submission logic goes here
+    return true; // Allow form submission
+
+    // Your existing form submission logic goes here
+}
+
+// // Attach the handleTermratingScale1Change function to the change event of termratingScale1Options
+// document.getElementById('termratingScale1Options').addEventListener('change', handleTermratingScale1Change);
+// document.getElementById('termratingScale2Options').addEventListener('change', handleTermratingScale2Change);
+// document.getElementById('termratingScale3Options').addEventListener('change', handleTermratingScale3Change);
+
+// Function to check if an option is selected in a select element
+function areOptionsSelected(selectId) {
+    var selectElement = document.getElementById(selectId);
+    return selectElement.selectedIndex > 0;
+}
+
+    function areOptionsSelected(optionsContainerId) {
+        // Implement logic to check if options are selected in the specified container
+        var optionsContainer = document.getElementById(optionsContainerId);
+        var options = optionsContainer.querySelectorAll('input[type="radio"]:checked');
+
+        // Adjust the logic based on the specific requirements for option selection
+        return options.length > 0;
+    }
+</script>
+{% endblock content %}
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+<script src="../static/vendor/formValidation/es6-shim.min.js"></script>
+<script src="../static/vendor/formValidation/formValidation.min.js"></script>
+<script src="../static/vendor/formValidation/Bootstrap.min.js"></script>
+<script src="../static/vendor/formValidation/Tachyons.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="../static/js/mark_submission.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+
+<script>
+function populateRadioOptions(options, containerId) {
+    var container = $("#" + containerId);
+    options.forEach(function (option, index) {
+        // Check if option is an object with a 'value' property
+        var optionValue = (typeof option === 'object' && option.hasOwnProperty('value')) ? option.value : option;
+
+        var optionElement = $("<div class='form-check'>" +
+            "<input type='radio' class='form-check-input' name='" + containerId + "' id='" + containerId + "Option" + (index + 1) + "' value='" + optionValue + "'>" +
+            "<label class='form-check-label' for='" + containerId + "Option" + (index + 1) + "'>" + optionValue + "</label>" +
+            "</div>");
+        container.append(optionElement);
+    });
+}
+$.ajax({
+    url: "/get-dropdown-rating",
+    method: "GET",
+    success: function (data) {
+        // Assume the data is an array of options
+        var ratingOptions = data;
+
+        // Sort the options in ascending order based on their values
+        ratingOptions.sort(function(a, b) {
+            // Assuming the options have a numeric value property, adjust accordingly
+            return a.value - b.value;
+        });
+
+        // Call the function to populate options for all radio button groups
+        populateRadioOptions(ratingOptions, "termratingScale1Options");
+        populateRadioOptions(ratingOptions, "termratingScale2Options");
+        populateRadioOptions(ratingOptions, "termratingScale3Options");
+        populateRadioOptions(ratingOptions, "termratingScale4Options");
+    },
+    error: function (error) {
+        console.error("Error fetching data:", error);
+    }
+});
+// to populate the dropdowns of termrating 
+$.ajax({
+    url: '/get-dropdown-rating', // Flask route to fetch data
+    method: 'GET',
+    dataType: 'json',
+    success: function(data) {
+        // Populate Term 1 dropdowns
+        var term1Dropdown1 = $('#termratingScale1');
+        var term1Dropdown2 = $('#termratingScale2');
+
+        // Build the HTML string for options
+        var optionsHtml = data.map(function(item) {
+            return `<option value="${item.value}">${item.text}</option>`;
+        }).join('');
+
+        // Set the HTML for Term 1 dropdowns
+        term1Dropdown1.html(optionsHtml);
+        term1Dropdown2.html(optionsHtml);
+
+        // Populate Term 2 dropdowns
+        var term2Dropdown1 = $('#termratingScale3');
+        var term2Dropdown2 = $('#termratingScale4');
+
+        // Set the HTML for Term 2 dropdowns
+        term2Dropdown1.html(optionsHtml);
+        term2Dropdown2.html(optionsHtml);
+    },
+    error: function(xhr, status, error) {
+        console.log('Error fetching data:', error);
+    }
+});
+$.ajax({
+    type: 'GET',
+    url: '/dropdown_values_rating',
+    success: function(response) {
+        // Assuming 'selectElement' is the same for all dropdowns
+        let selectElement = $('#termratingSelect');
+
+        selectElement.empty();
+        selectElement.append($('<option value="">---Select---</option>'));
+
+        response.forEach(function(option) {
+            let optionElement = $('<option></option>').val(option.id).text(option.name);
+            selectElement.append(optionElement);
+        });
+
+        // Retrieve and display the selected value
+        let selectedValue = selectElement.val();
+        console.log('Selected value:', selectedValue);
+    },
+    error: function() {
+        // Handle error case
+    } 
+});
+function termrating(studentId) {
+    console.log("Before retrieving values");
+
+    var term1Scale1 = $('#termratingScales1 input[type="radio"]:checked').val();
+    console.log("Term 1 Scale 1:", term1Scale1);
+
+    var term1Scale2 = $('#termratingScales2 input[type="radio"]:checked').val();
+    console.log("Term 1 Scale 2:", term1Scale2);
+
+    var term2Scale1 = $('#termratingScales3 input[type="radio"]:checked').val();
+    console.log("Term 2 Scale 1:", term2Scale1);
+
+    var term2Scale2 = $('#termratingScales4 input[type="radio"]:checked').val();
+    console.log("Term 2 Scale 2:", term2Scale2);
+    // Make an AJAX request or perform other operations as needed
+    $.ajax({
+        type: 'POST',
+        url: '/termrating/' + studentId,
+        data: {
+            termratingScale1: term1Scale1,
+            termratingScale2: term1Scale2,
+            termratingScale3: term2Scale1,
+            termratingScale4: term2Scale2
+        },
+        success: function (response) {
+            console.log('Submission response:', response);
+
+            // Check if the response status is "success" and redirect to the specified URL
+            if (response.status === 'success') {
+                console.log('Received "success" response. Redirecting to:', response.redirect_url);
+                window.location.href = response.redirect_url;
+            } else {
+                console.log('Received unexpected response. Check the response content.');
+                // Handle other success responses or errors if needed
+            }
+        }
+    });
+
+    console.log('After AJAX request');
+}
+
+
+
+    // to enter in database
+    function std_detail_validation() {
+        var form = document.getElementById("info");
+        var data = new FormData(form);
+        var id=$('#std_id').val();
+        $.ajax({
+            type: 'POST',
+            url: '/store-std-marks',
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+
+            success: function (res) {
+                if (res === 'Error') {
+                    swal("Data already exist", "Infomation submission failed", "error")
+                        .then(function () {
+                            window.location = ""
+                        });
+                } else {
+                    swal("Marks successfully updated", "Click Ok to continue", "success")
+                        .then(function () {
+                            location.reload()
+                        })
+                }
+            }
+        });
+    }
+
+    $.ajax({
+        url: '/get-dropdown-rating', // Flask route to fetch data
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var dropdown = $('#ratingScale1');
+            $.each(data, function(index, item) {
+                dropdown.append($('<option>', {
+                    value: item.value,
+                    text: item.text
+                }));
+            });
+        },
+        error: function(xhr, status, error) {
+            console.log('Error fetching data:', error);
+        }
+    });
+
+    $.ajax({
+        url: '/get-dropdown-rating', // Flask route to fetch data
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            let dropdown = $('#ratingScale2');
+            $.each(data, function(index, item) {
+                dropdown.append($('<option>', {
+                    value: item.value,
+                    text: item.text
+                }));
+            });
+        },
+        error: function(xhr, status, error) {
+            console.log('Error fetching data:', error);
+        }
+    });
+
+function populateSelectOptions(selectId, value) {
+    let selectElement = $('#' + selectId);
+
+        $.ajax({
+        url: '/get-dropdown-rating', // Flask route to fetch data
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var dropdown = $('#ratingScale1');
+            $.each(data, function(index, item) {
+                dropdown.append($('<option>', {
+                    value: item.value,
+                    text: item.text
+                }));
+            });
+        },
+        error: function(xhr, status, error) {
+            console.log('Error fetching data:', error);
+        }
+    });
+
+    $.ajax({
+        url: '/get-dropdown-rating', // Flask route to fetch data
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            let dropdown = $('#ratingScale2');
+            $.each(data, function(index, item) {
+                dropdown.append($('<option>', {
+                    value: item.value,
+                    text: item.text
+                }));
+            });
+        },
+        error: function(xhr, status, error) {
+            console.log('Error fetching data:', error);
+        }
+    });
+
+
+    $.ajax({
+        type: 'GET',
+        url: '/dropdown_values_rating',
+        success: function(response) {
+            let dropdownValues = response;
+
+            selectElement.empty();
+            selectElement.append($('<option value="">---Select---</option>'));
+
+            dropdownValues.forEach(function(option) {
+                let optionElement = $('<option></option>').val(option.id).text(option.name);
+
+                // Set the selected option
+                if (option.id === value) {
+                    optionElement.prop('selected', true);
+                }
+
+                selectElement.append(optionElement);
+            });
+
+            // Retrieve and display the selected value
+            let selectedValue = selectElement.val();
+            console.log('Selected value:', selectedValue);
+        },
+        error: function() {
+            // Handle error case
+        }
+    });
+}
+
+ $(document).ready(function () {
+    $('a[data-toggle="pill"][href="#marks_view"]').click(function(e) {
+    var id = $('#std_id').val();
+    loadUsers(id);
+    $('#remarksTable').hide();
+    $('#indiMarksTable').hide();
+    $('#marksTable').show();
+  });
+  var id = $('#std_id').val();
+    loadUsers(id);
+    $(document).on('click', '.view-rating', function (e) {
+    e.preventDefault();
+    //var studentId = $(this).attr('href').split('/').pop();
+    let studentId = $(this).data('student-id');
+    let subject = $(this).data('subject-id');
+    loadRatings(studentId,subject);
+    // You can perform additional actions with the studentId, such as making an AJAX request to fetch the ratings data for the specific student.
+  });
+
+  $(document).on('click', '.edit-rating', function (e) {
+    e.preventDefault();
+    var studentId = $(this).data('student-id');
+    var subject = $(this).data('subject-id');
+    $('#edit_Student_marks').modal('show');
+    editRatings(studentId,subject);
+  });
+
+  function editRatings(studentId, subject) {
+    $.ajax({
+        type: 'GET',
+        url: '/edit-subjectmarks/' + studentId + '/' + subject,
+        success: function (response) {
+            console.log(response, '***RESPONSE');
+            if (response.data) {
+                // Populate the form fields with the retrieved data
+                populateFormFields(response.data, studentId);
+
+                // Optionally, disable form fields for editing
+            } else {
+                swal('Error', 'Failed to fetch data for editing', 'error');
+            }
+        },
+        error: function () {
+            swal('Error', 'Failed to fetch data for editing', 'error');
+        }
+    });
+}
+
+function populateFormFields(data, studentId) {
+    // Assuming there is only one record in the data array
+    var record = data[0];
+    // Populate the form fields with the retrieved data
+    $('#editForm input[name="editclass_test_1"]').val(record.class_test_one);
+    $('#editForm input[name="editCA1"]').val(record.ca1);
+    $('#editForm input[name="editmid_term"]').val(record.mid_term);
+    $('#editForm input[name="editclass_test_2"]').val(record.class_test_two);
+    $('#editForm input[name="editCA2"]').val(record.ca2);
+    $('#editForm input[name="editannual_exam"]').val(record.annual_exam);
+
+    // Assuming 'ratingScale1' and 'ratingScale2' are select elements
+    populateeditSelectOptions('eratingScales1', record.eratingScale1);
+    populateeditSelectOptions('eratingScales2', record.eratingScale2);
+
+    // Use the studentId as needed
+    $('#editForm input[name="std_id"]').val(record.student_id);
+}
+
+function populateeditSelectOptions(selectId, value) {
+    let selectElement = $('#editForm' + selectId);
+
+        $.ajax({
+        url: '/eget-dropdown-rating', // Flask route to fetch data
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var dropdown = $('#eratingScale1');
+            $.each(data, function(index, item) {
+                dropdown.append($('<option>', {
+                    value: item.value,
+                    text: item.text
+                }));
+            });
+        },
+        error: function(xhr, status, error) {
+            console.log('Error fetching data:', error);
+        }
+    });
+
+    $.ajax({
+        url: '/eget-dropdown-rating', // Flask route to fetch data
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            let dropdown = $('#eratingScale2');
+            $.each(data, function(index, item) {
+                dropdown.append($('<option>', {
+                    value: item.value,
+                    text: item.text
+                }));
+            });
+        },
+        error: function(xhr, status, error) {
+            console.log('Error fetching data:', error);
+        }
+    });
+
+
+    $.ajax({
+        type: 'GET',
+        url: '/dropdown_values_rating',
+        success: function(response) {
+            let dropdownValues = response;
+
+            selectElement.empty();
+            selectElement.append($('<option value="">---Select---</option>'));
+
+            dropdownValues.forEach(function(option) {
+                let optionElement = $('<option></option>').val(option.id).text(option.name);
+
+                // Set the selected option
+                if (option.id === value) {
+                    optionElement.prop('selected', true);
+                }
+
+                selectElement.append(optionElement);
+            });
+
+            // Retrieve and display the selected value
+            let selectedValue = selectElement.val();
+            console.log('Selected value:', selectedValue);
+        },
+        error: function() {
+            // Handle error case
+        }
+    });
+}
+
+
+function loadRatings(studentId, subject) {
+        $('#remarksTable').show();
+        // Load data for remarksList table
+        $.ajax({
+        url: '/view-subjectrating/' + studentId + '/' + subject,
+        type: 'GET',
+        success: function(response) {
+            console.log(response,"***RESPONSE")
+            var remarksTableBody = $('#remarksList tbody');
+            remarksTableBody.empty();
+
+            $.each(response.data, function(index, item) {
+                var row = '<tr>';
+                row += '<td>' + item.sl + '</td>';
+                row += '<td>' + item.personal + '</td>';
+                row += '<td>' + item.rating + '</td>';
+                row += '</tr>';
+                remarksTableBody.append(row);
+            });
+        }
+    });
+        $.ajax({
+        url: '/get-subject-marks/' + studentId + '/' + subject,
+        type: 'GET',
+        success: function(response) {
+            var marksTableBody = $('#std_marks_list tbody');
+            marksTableBody.empty();
+            $.each(response.data, function(index, item) {
+                var row = '<tr>';
+                row += '<td>' + item.subject + '</td>';
+                row += '<td>' + item.class_test_one + '</td>';
+                row += '<td>' + item.mid_term + '</td>';
+                row += '<td>' + item.class_test_two + '</td>';
+                row += '<td>' + item.annual_exam + '</td>';
+                row += '<td>' + item.cont_assessment + '</td>';
+                row += '<td>' + item.total + '</td>';
+                 '</tr>';
+                marksTableBody.append(row);
+            });
+        }
+    });
+        $('#indiMarksTable').show();
+        $('#marksTable').hide();
+    }
+});
+
+function loadUsers(id) {
+    $('#customerList').DataTable({
+        'processing': true,
+        'serverSide': true,
+        'bDestroy': true,
+        'serverMethod': 'POST',
+        'ajax': {
+            'url': '/get-std-grade/' + id,
+        },
+        'columns': [
+            {data: 'subject' },
+            // {data: 'class_test_one' },
+            {data: 'ca1'},
+            {data: 'ratingscale1'},
+            {data: 'mid_term'},
+            // {data: 'class_test_two' },
+            {data: 'ca2'},
+            {data: 'ratingscale2'},
+            {data: 'annual_exam' },
+            {
+            render: function(data, type, full, meta) {
+            return '<div class="dropdown">' +
+            // '<a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background:orange">' +
+            // '<b>Click</b>' +
+            // '</a>' +
+            // '<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">' +
+            // '<a class="dropdown-item view-rating" href="/view-std-rating/' + full.student_id + '/' + full.subjectId + '" data-student-id="' + full.student_id + '" data-subject-id="' + full.subjectId + '">View</a>' +          
+             '</div>';
+            }
+            },
+        ],
+        language: {
+            paginate: {
+                next: '&#8594;', // or '→'
+                previous: '&#8592;' // or '←'
+            }
+        },
+        "ordering": false
+    });
+}
+
+function editFunction(id) {
+    var form = document.getElementById("editForm"); // Corrected the ID
+    var data = new FormData(form);
+    $.ajax({
+        type: 'POST',
+        url: '/update-std-marks/' + id,
+        data: data,
+        processData: false,
+        contentType: false,
+        cache: false,
+        success: function (res) {
+            if (res === 'Error') {
+                // Handle the error case
+            } else {
+                swal("Marks successfully updated", "Click Ok to continue", "success")
+                    // .then(function () {
+                    //     location.reload();
+                    // });
+            }
+        },
+        error: function (error) {
+            // Handle the error case
+            console.log('Error:', error);
+        }
+    });
+}
+
+</script>
+{% endblock javascripts %}

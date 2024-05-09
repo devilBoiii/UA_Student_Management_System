@@ -1,0 +1,122 @@
+<style>
+
+</style>
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link" href="{{url_for('admin_blueprint.dashboard')}}">
+        <i class="icon-grid menu-icon"></i>
+        <span class="menu-title">Dashboard</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#form-elements3" aria-expanded="false" aria-controls="form-elements">
+        <i class="icon-columns menu-icon"></i>
+        <span class="menu-title">Applications</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="form-elements3">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <li class="nav-item"><a class="nav-link" href="{{url_for('human_resource_blueprint.std_app_list')}}" style="color: #5c5656;">Application List</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#ui-basic1" aria-expanded="false" aria-controls="ui-basic1">
+        <i class="icon-layout menu-icon"></i>
+        <span class="menu-title">Payment Details</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-basic1">
+        <ul class="nav flex-column sub-menu" style="background-color: #fff;">
+            <details>
+              <summary>
+                <span class="menu-title">Seat Confirmation Payment</span>
+                <i class="menu-arrow"></i>
+              </summary>
+              <ul class="nav flex-column sub-menu" style="background: inherit; padding-left: 20px; padding-right: 20px; list-style: none;">
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('human_resource_blueprint.view_payment_seatconfirm') }}?paymentmodes=Seat Confirm" style="color: #5c5656;" >
+                    <i class="icon-layout menu-icon" style="color: #5c5656;"></i>
+                    <span class="menu-title" onmouseover="this.style.color='black'" onmouseout="this.style.color=''">View</span>
+                  </a>
+                </li>
+              </ul>
+            </details>
+          </li>
+            <details>
+              <summary>
+                <span class="menu-title">View Fees Payment</span>
+                <i class="menu-arrow"></i>
+              </summary>
+              <ul class="nav flex-column sub-menu" style="background: inherit; padding-left: 20px; padding-right: 20px;">
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('human_resource_blueprint.view_payment_installment') }}?paymentmodes=Installment" style="color: #5c5656;" >
+                    <i class="icon-layout menu-icon" style="color: #5c5656;"></i>
+                    <span class="menu-title" onmouseover="this.style.color='black'" onmouseout="this.style.color=''">Installment</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('human_resource_blueprint.view_payment_full') }}?paymentmodes=Full" style="color: #5c5656;">
+                    <i class="icon-layout menu-icon" style="color: #5c5656;"></i> 
+                    <span class="menu-title" onmouseover="this.style.color='black'" onmouseout="this.style.color=''">Full</span>
+                  </a>
+                </li>
+              </ul>
+            </details>
+          <details>
+            <summary>
+              <a href="{{url_for('human_resource_blueprint.view_past_payment')}}" style="color:black;text-decoration: none;">Past Payments</a>
+            </summary>
+          </details>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+        <i class="icon-bar-graph menu-icon"></i>
+        <span class="menu-title">Student Slot</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="charts">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <li class="nav-item"> <a class="nav-link" href="{{url_for('human_resource_blueprint.std_slot')}}" style="color: #5c5656;">Student Slot List</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{url_for('human_resource_blueprint.create_announcement')}}">
+        <i class="ti-pencil menu-icon"></i>
+        <span class="menu-title">Create Announcement</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <i class="icon-layout menu-icon"></i>
+        <span class="menu-title">Class Teacher</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-basic">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <li class="nav-item"> <a class="nav-link" href="{{url_for('human_resource_blueprint.addClassTeacher')}}" style="color: #5c5656;">Add Class Teacher</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url_for('human_resource_blueprint.getClassTeacher_hr')}}" style="color: #5c5656;">Class Teacher List</a></li>
+          <!-- <li class="nav-item"> <a class="nav-link" href="{{url_for('admin_blueprint.admin_typography')}}">Typography</a></li> -->
+        </ul>
+      </div>
+    </li>
+   
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+        <i class="icon-columns menu-icon"></i>
+        <span class="menu-title">Subject Teacher</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="form-elements">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <li class="nav-item"> <a class="nav-link" href="{{url_for('human_resource_blueprint.addSubTeacher')}}" style="color: #5c5656;">Add Subject Teacher</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url_for('human_resource_blueprint.getSubjectTeacher')}}" style="color: #5c5656;">Subject Teacher List</a></li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</nav>
+

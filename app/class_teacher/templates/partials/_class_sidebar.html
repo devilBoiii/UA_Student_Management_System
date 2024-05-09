@@ -1,0 +1,92 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link" href="{{url_for('admin_blueprint.dashboard')}}">
+        <i class="icon-grid menu-icon"></i>
+        <span class="menu-title">Dashboard</span>
+      </a>
+    </li>
+    {% if extracted_values == ['Class Teacher & Subject Teacher'] %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#form-elements3" aria-expanded="false" aria-controls="form-elements">
+        <i class="icon-columns menu-icon"></i>
+        <span class="menu-title">Subject Teaching List</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="form-elements3">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <li class="nav-item"><a class="nav-link" href="{{url_for('class_teacher_blueprint.view_class_table')}}" style="color: #5c5656;">Show List</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+        <i class="icon-columns menu-icon"></i>
+        <span class="menu-title">My Students 
+        </span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="form-elements">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <!-- <li class="nav-item"><a class="nav-link" href="{{url_for('class_teacher_blueprint.add_student')}}" style="color: #5c5656;"> Add Student</a></li> -->
+          <li class="nav-item"><a class="nav-link" href="{{url_for('class_teacher_blueprint.get_student_list')}}" style="color: #5c5656;">Student List</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#form-elements6" aria-expanded="false" aria-controls="form-elements">
+        <i class="icon-columns menu-icon"></i>
+        <span class="menu-title">{{class_teacher}}-{{section_og}} Teachers</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="form-elements6">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <!-- <li class="nav-item"><a class="nav-link" href="{{url_for('class_teacher_blueprint.add_student')}}" style="color: #5c5656;"> Add Student</a></li> -->
+          <li class="nav-item"><a class="nav-link" href="{{url_for('class_teacher_blueprint.get_subject_teacher_list')}}" style="color: #5c5656;">Show List</a></li>          
+        </ul>
+      </div>
+    </li>
+    {% else %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#form-elements9" aria-expanded="false" aria-controls="form-elements">
+        <i class="icon-columns menu-icon"></i>
+        <span class="menu-title">My Students 
+        </span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="form-elements9">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <!-- <li class="nav-item"><a class="nav-link" href="{{url_for('class_teacher_blueprint.add_student')}}" style="color: #5c5656;"> Add Student</a></li> -->
+          <li class="nav-item"><a class="nav-link" href="{{url_for('class_teacher_blueprint.get_student_list')}}" style="color: #5c5656;">Student List</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+        <i class="icon-columns menu-icon"></i>
+        <span class="menu-title">Subject Teachers</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="form-elements">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <!-- <li class="nav-item"><a class="nav-link" href="{{url_for('class_teacher_blueprint.add_student')}}" style="color: #5c5656;"> Add Student</a></li> -->
+          <li class="nav-item"><a class="nav-link" href="{{url_for('class_teacher_blueprint.get_subject_teacher_list')}}" style="color: #5c5656;"> Subject Teacher's List</a></li>          
+        </ul>
+      </div>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#form-table" aria-expanded="false" aria-controls="form-table">
+        <i class="icon-columns menu-icon"></i>
+        <span class="menu-title">Time Table</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="form-table">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <li class="nav-item"><a class="nav-link" href="{{url_for('class_teacher_blueprint.get_student_timetable')}}" style="color: #5c5656;">Upload Time Table</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{url_for('class_teacher_blueprint.upload_studenttimetable')}}" style="color: #5c5656;">Student Time Table</a></li>
+        </ul>
+      </div>
+    </li>
+      </ul>
+</nav>

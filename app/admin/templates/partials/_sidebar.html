@@ -1,0 +1,89 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link" href="{{url_for('admin_blueprint.dashboard')}}">
+        <i class="icon-grid menu-icon"></i>
+        <span class="menu-title">Dashboard</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <i class="icon-layout menu-icon"></i>
+        <span class="menu-title">User Management</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-basic">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <li class="nav-item"> <a class="nav-link" href="{{url_for('admin_blueprint.admin_add_user')}}" style="color: #5c5656;">Add New User</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{url_for('admin_blueprint.admin_user_list')}}" style="color: #5c5656;">User List</a></li>
+          <!-- <li class="nav-item"> <a class="nav-link" href="{{url_for('admin_blueprint.admin_typography')}}">Typography</a></li> -->
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+        <i class="icon-columns menu-icon"></i>
+        <span class="menu-title">Applications</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="form-elements">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <li class="nav-item"><a class="nav-link" href="{{url_for('admin_blueprint.admin_std_app_list')}}" style="color: #5c5656;">Application List</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+        <i class="icon-bar-graph menu-icon"></i>
+        <span class="menu-title">User Inquiries</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="charts">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <li class="nav-item"> <a class="nav-link" href="{{url_for('admin_blueprint.usrfeedback')}}" style="color: #5c5656;">User Inquiry</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#ui-basic1" aria-expanded="false" aria-controls="ui-basic">
+        <i class="icon-layout menu-icon"></i>
+        <span class="menu-title">Class Teacher</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-basic1">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <li class="nav-item"> <a class="nav-link" href="{{url_for('admin_blueprint.getclassteacher')}}" style="color: #5c5656;">Class Teacher List</a></li>
+          <!-- <li class="nav-item"> <a class="nav-link" href="{{url_for('admin_blueprint.admin_typography')}}">Typography</a></li> -->
+        </ul>
+      </div>
+    </li>
+   
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#form-elements1" aria-expanded="false" aria-controls="form-elements">
+        <i class="icon-columns menu-icon"></i>
+        <span class="menu-title">Subject Teacher</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="form-elements1">
+        <ul class="nav flex-column sub-menu" style="background: white;">
+          <li class="nav-item"> <a class="nav-link" href="{{url_for('admin_blueprint.getsubjectteacher')}}" style="color: #5c5656;">Subject Teacher List</a></li>
+        </ul>
+      </div>
+    </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-basic2" aria-expanded="false" aria-controls="ui-basic">
+          <i class="icon-layout menu-icon"></i>
+          <span class="menu-title">Student Slots</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-basic2">
+          <ul class="nav flex-column sub-menu" style="background: white;">
+            <li class="nav-item"> <a class="nav-link" href="{{url_for('admin_blueprint.student_slot')}}" style="color: #5c5656;">Add Student Slot</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{url_for('admin_blueprint.student_slot_list')}}" style="color: #5c5656;">Student Slot List</a></li>
+          </ul>
+        </div>
+      </li>
+
+    </li>  </ul>
+</nav>

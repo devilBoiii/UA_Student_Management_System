@@ -1,0 +1,396 @@
+<body>
+    {% extends 'layouts/result_template.html' %}
+
+    {% block title %} Student Management System {% endblock title %}
+    <!-- Specific CSS goes HERE -->
+    {% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <style>
+        .table th,
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #indiMarksTable {
+            margin-bottom: 20px;
+            /* Adjust the value as needed */
+        }
+
+        #resultmarksList {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        #resultmarksList th,
+        #resultmarksList td {
+            border: 1px solid black;
+            padding: 8px;
+            vertical-align: middle;
+        }
+
+        #stdmarks {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        #stdmarks th,
+        #stdmarks td {
+            border: 1px solid black;
+            padding: 8px;
+            vertical-align: middle;
+        }
+
+        .col-subject {
+            width: 2%;
+        }
+
+        .col-term1 {
+            width: 6%;
+        }
+
+        .col-term2 {
+            width: 6%;
+        }
+
+        .col-grandTotal {
+            width: 2%;
+        }
+
+        .col-ca1,
+        .col-ca2,
+        .col-midterm,
+        .col-annual,
+        .col-total2,
+        .col-total1 {
+            width: 2%;
+        }
+        .overall{
+            background-color: rgb(207, 208, 211);
+            border-radius: 10%;
+            margin-left: 3px;
+        }
+    </style>
+    {% endblock stylesheets %}
+    {% block content %}
+            <div class="justify-content-center">
+                 <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="pos-rel">
+                                        <form action="" class="generateHtmlToPdf"> 
+                                            <div id="downloadpdf">
+                                            <div id="division">
+                                                <div class="table-wrapper">
+                                                    <div class="table-title">
+                                                        <div class="row">
+                                                            <div class="col-sm-12 col-md-12" style="text-align: center;">
+                                                                <h6 class="text-center">STATEMENT OF MARKS</h6>
+                                                                <hr>
+                                                                <p><b>Student Name :</b> {{std.first_name}} {{std.last_name}}</p>
+                                                                <p><b>Student Code :</b> {{std.student_code}}</p>
+                                                                <!-- Add your image tag here -->
+                                                                <img src="../../static/images/logo.png" alt="UA logo" style=" width:10%; margin: -80px 800px;" >
+                                                            </div>
+                                                        </div>
+                                                    </div><br><br>
+                                                        <table id="stdmarks">
+                                                            <thead class="thead-light">
+                                                                <tr>
+                                                                    <th colspan="8">SUBJECT WISE ACADEMIC TRANSCRIPT
+                                                                    </th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th rowspan="2" colspan="1" class="col-subject">
+                                                                        Subject</th>
+                                                                    <th colspan="3" class="col-term1">TERM I</th>
+                                                                    <th colspan="3" class="col-term2">TERM II</th>
+                                                                    <th rowspan="2" colspan="1" class="col-grandTotal">
+                                                                        GRAND TOTAL<br>(Total I + Total II)</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th rowspan='1' colspan="1" class="col-ca1">CA
+                                                                    </th>
+                                                                    <th rowspan='1' colspan="1" class="col-midterm">
+                                                                        Mid
+                                                                        Term <br>Examination</th>
+                                                                    <th rowspan='1' colspan="1" class="col-total1">
+                                                                        Total
+                                                                        I</th>
+                                                                    <th rowspan='1' colspan="1" class="col-ca2">CA
+                                                                    </th>
+                                                                    <th rowspan='1' colspan="1" class="col-annual">
+                                                                        Annual <br>Examination</th>
+                                                                    <th rowspan='1' colspan="1" class="col-total2">
+                                                                        Total
+                                                                        II</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for mark in std_marks %}
+                                                                <tr>
+                                                                    <td style="width: 2%;">{{ mark.subject_name}}</td>
+                                                                    <td style="width: 2%;">{{ mark.ca1|round(1) }}<span class="overall"> /15</span></td>
+                                                                    <td style="width: 2%;">{{ mark.mid_term|round(1) }}
+                                                                        <span class="overall"> /35</span>
+                                                                    </td>
+                                                                    <td style="width: 2%;">{{ (mark.mid_term + mark.ca1)|round(1) }}
+                                                                        <span class="overall"> /50</span>
+                                                                    </td>
+                                                                    <td style="width: 2%;">{{ mark.ca2|round(1) }}
+                                                                        <span class="overall"> /15</span>
+                                                                    </td>
+                                                                    <td style="width: 2%;">{{ mark.annual_exam|round(1) }}
+                                                                        <span class="overall"> /35</span>
+                                                                    </td>
+                                                                    <td style="width: 2%;">{{ (mark.annual_exam + mark.ca2)|round(1) }}
+                                                                        <span class="overall"> /50</span>
+                                                                    </td>
+                                                                    <td style="width: 2%;">{{ (mark.annual_exam + mark.ca2 + mark.mid_term + mark.ca1)|round(1) }}
+                                                                        <span class="overall"> /100</span>
+                                                                    </td>
+                                                                </tr>
+                                                                {% endfor %}
+                                                                
+                                                                <tr>
+                                                                    <td rowspan="4"></td>
+                                                                    <td colspan="2"><b>Percentage</b></td>
+                                                                    <td><b>{{ std_academic.percentage }}</b></td>
+                                                                    <td colspan="2"><b>Percentage</b></td>
+                                                                    <td><b>{{ std_academic.percentage2}}</b></td>
+                                                                    <td><b></b></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2"><b>Position</b></td>
+                                                                    <td><b>{{ std_academic.position }}</b></td>
+                                                                    <td colspan="2"><b>Position</b></td>
+                                                                    <td><b>{{ std_academic.position2}}</b></td>
+                                                                    <td><b>{{ std_academic.total_position}}</b></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2"><b>Attendance</b></td>
+                                                                    <td>{{ std_academic.attendance }}
+                                                                        <span class="overall" style="background-color: none;"> /110</span>
+                                                                    </td>
+                                                                    <td colspan="2"><b>Attendance</b></td>
+                                                                    <td>{{ std_academic.attendance2}}
+                                                                        <span class="overall" style="background-color: none;"> /57</span>
+                                                                    </td>
+                                                                    <td>{{ std_academic.total_attendance}}
+                                                                        <span class="overall" style="background-color: none;"> /335</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2"><b>Total no. of Students</b></td>
+                                                                    <td><b>{{ std_academic.total_no_stds }}</b></td>
+                                                                    <td colspan="2"><b>Total no. of Students</b></td>
+                                                                    <td><b>{{ std_academic.total_no_stds2}}</b></td>
+                                                                    <td><b>{{ std_academic.total_no_stds2}}</b></td>
+                                                                </tr>
+                                                                                                                                                                                                                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr class="additional-header"><th colspan="4" style="text-align: left;">Signature of Parent/Guardian : </th><th colspan="4" style="text-align: left;">Signature of Parent/Guardian :</th>
+                                                                <tr class="additional-header"><th colspan="4" style="text-align: left;">Signature of Class Teacher : </th><th colspan="4" style="text-align: left;">Signature of Class Teacher : </th>
+                                                                <tr>
+                                                                    <td colspan="8"
+                                                                        style="text-align: center; font-weight: bold; ">
+                                                                        The detailed criteria for the continuous
+                                                                        assessment (CA) and the examinations for
+                                                                        each
+                                                                        subject should be based on the guidelines
+                                                                        provided in the syllabus/guidebook for each
+                                                                        subject.</td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+
+                                                    <br>
+                                                    <!-- Student Remarks -->
+                                                    <div class="row" id="std_remarks">
+                                                        <h4 class="card-title" style="text-align: center;">Student Remarks</h4>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group row">
+                                                                <label for="std_status"
+                                                                    class="control-label col-sm-4 text-right">Status</label>
+                                                                <div class="col-sm-8">
+                                                                    <input type="text" name="std_status"
+                                                                        id="view_std_status" class="form-control"
+                                                                        value="{{ std_academic.std_status }}" readonly>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group row">
+                                                                <label class="control-label col-sm-4 text-right"
+                                                                    for="punctuality">Punctuality</label>
+                                                                <div class="col-sm-8">
+                                                                    <input type="text" name="punctuality"
+                                                                        id="view_punctuality" class="form-control"
+                                                                        value="{{ punctuality_label}}" readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group row">
+                                                                <label class="control-label col-sm-4 text-right"
+                                                                    for="discipline">Discipline</label>
+                                                                <div class="col-sm-8">
+                                                                    <input type="text" name="discipline"
+                                                                        id="view_discipline" class="form-control"
+                                                                        value="{{ discipline_label}}" readonly>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group row">
+                                                                <label class="control-label col-sm-4 text-right"
+                                                                    for="leadership">Leadership Quality</label>
+                                                                <div class="col-sm-8">
+                                                                    <input type="text" name="leadership"
+                                                                        id="view_leadership" class="form-control"
+                                                                        value="{{ leadership_label}}" readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group row">
+                                                                <label for="supw_grade"
+                                                                    class="control-label col-sm-4 text-right">Supw
+                                                                    Grade</label>
+                                                                <div class="col-sm-8">
+                                                                    <input type="text" name="supw_grade"
+                                                                        id="view_supw_grade" class="form-control"
+                                                                        value="{{ std_academic.supw_grade }}" readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group row">
+                                                                <label for="remarks"
+                                                                    class="control-label col-sm-4 text-right">Remarks:</label>
+                                                                <div class="col-sm-8">
+                                                                    <textarea name="remarks" id="remarks"
+                                                                        class="form-control" value="{{ std_academic.remarks }}" readonly>{{ std_academic.remarks }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <button class="btn btn-primary" type="button" id="downloadButton">
+                                        <a id="downloadpages" style="color: white; text-decoration: none;">
+                                            <i class="fa fa-download"></i> Download
+                                        </a>
+                                    </button>
+                                    <button onclick="printContent()" class="btn btn-primary" id="printButton">
+                                        <i class="fa fa-print"></i> Print Result
+                                    </button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var form = $('.generateHtmlToPdf'),
+                a4 = [595.28, 841.89]; // for a4 size paper width and height  
+    
+            $('#downloadpages').on('click', function () {
+                $('body').scrollTop(0);
+                createPDF();
+            });
+    
+            async function createPDF() {
+                await getCanvas().then(function (canvas) {
+                    var
+                        img = canvas.toDataURL("image/png"),
+                        doc = new jsPDF({
+                            unit: 'px',
+                            format: 'a4'
+                        });
+                        console.log(img)
+                    doc.addImage(img, 'png', 20, 20);
+                    doc.save('UAresult.pdf');
+                    form.width(cache_width);
+                });
+            }
+    
+            function getCanvas() {
+                form.width((a4[0] * 1.33333) - 80).css('max-width', 'none');
+                return html2canvas(form, {
+                    imageTimeout: 2000,
+                    removeContainer: true
+                });
+            }
+        });
+
+        // script for print
+        function printContent() {
+
+    // Hide the buttons
+    var downloadButton = document.getElementById('downloadButton');
+    var printButton = document.getElementById('printButton');
+
+    if (downloadButton && printButton) {
+        downloadButton.style.display = 'none';
+        printButton.style.display = 'none';
+    } else {
+        console.error("Download button or Print button not found");
+    }
+
+    // Remove the border from input fields
+    var inputFields = document.querySelectorAll('#std_remarks input, #std_remarks textarea');
+    inputFields.forEach(function (input) {
+        input.style.border = 'none';
+    });
+
+    // Trigger the print action
+    window.print();
+
+    // Restore the buttons after a short delay (adjust as needed)
+    setTimeout(function () {
+        if (downloadButton && printButton) {
+            downloadButton.style.display = 'inline-block';
+            printButton.style.display = 'inline-block';
+        } else {
+            console.error("Download button or Print button not found");
+        }
+    }, 0); // Adjust the delay as needed
+}
+
+    </script>
+    
+    
+
+{% endblock javascripts %}
+
+</body>

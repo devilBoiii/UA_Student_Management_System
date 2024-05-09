@@ -1,0 +1,301 @@
+{% extends 'layouts/signin.html' %}
+
+{% block title %} Login {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<style>
+  .card-body {
+  display: flex;
+  justify-content: center;
+}
+
+.form-container {
+  max-width: 300px;
+  width: 100%;
+}
+.rounded-container {
+        border-radius: 20px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+    
+    .rounded-input {
+        border-radius: 20px;
+    }
+    
+    .rounded-button {
+        border-radius: 500px;
+    }
+    .eye-icon {
+    font-size: 24px; /* Adjust the size as needed */
+  }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card card-body rounded-container">
+        <div class="form-container" style="color: white; padding: 40px;">
+            <form class="form-horizontal form-group">
+                <div class="form-group row">
+                    <label for="email" class="col-sm-3 form-control-label">Email</label>
+                    <div class="col-sm-9">
+                        <input type="email" name="emailId" class="form-control form-control-sm rounded-pill" id="emailId" placeholder="enter email" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="userName" class="col-sm-3 form-control-label">User Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="userName" class="form-control form-control-sm rounded-pill" id="userName" placeholder="enter user name" readonly>
+                        <input type="hidden" name="userNames" class="form-control form-control-sm rounded-pill" id="userNames" placeholder="Phone">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="password" class="col-sm-3 form-control-label">Password</label>
+                    <div class="col-sm-9">
+                        <input type="password" name="password" class="form-control form-control-sm rounded-pill" id="password" placeholder="enter password" readonly>
+                        <span id="passwordError" class="text-danger"></span>  
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <div class="input-group-append">
+                        <span class="input-group-text" style="cursor: pointer;" onclick="togglePasswordVisibility()">
+                          <i class="fa fa-eye eye-icon" id="password-toggle"></i>
+                        </span>
+                      </div>
+                    <button type="submit" class="btn btn-primary rounded-button" id="searchButton" >Edit Password</button>
+                    <button type="button" class="btn btn-secondary rounded-button" id="cancelButton" onclick="cancelButtonFunc()">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="sendModalLabel" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <form id="sendModalForm">
+                <div class="modal-header">
+                    <h5 class="modal-title mr-auto" id="sendModalLabel">Reset your password
+                        <button type="button" class="close" data-dismiss="modal" style="font-size: 30px; font-weight: bold;">&times;</button>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="emails" class="col-sm-3 form-control-label">Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" name="emailIds" class="form-control form-control-sm rounded-pill" id="emailIds" placeholder="enter email" readonly>
+                            <input type="hidden" name="emails" class="form-control form-control-sm rounded-pill" id="emails" placeholder="enter email">
+                            <span id="emailErrors" class="text-danger"></span>  
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="userNamess" class="col-sm-3 form-control-label">User Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="userNamess" class="form-control form-control-sm rounded-pill" id="userNamess" placeholder="enter user name" readonly>
+                            <input type="hidden" name="userNamed" class="form-control form-control-sm rounded-pill" id="userNamed" placeholder="enter user name">
+                            <span id="userNameErrors" class="text-danger"></span>  
+                        </div>
+                    </div>
+    
+                    <div class="form-group row">
+                        <label for="passwords" class="col-sm-3 form-control-label">Password</label>
+                        <div class="col-sm-9">
+                            <input type="password" name="passwords" class="form-control form-control-sm rounded-pill" id="passwords" placeholder="enter password">
+                            <input type="hidden" name="passworded" class="form-control form-control-sm rounded-pill" id="passworded" placeholder="">
+                            <input type="hidden" name="hashed_passwords" class="form-control form-control-sm rounded-pill" id="hashed_passwords" placeholder="">
+                            <input type="hidden" name="salt" class="form-control form-control-sm rounded-pill" id="salt" placeholder="">
+                            <span id="passwordErrors" class="text-danger"></span>  
+                        </div>
+                    </div>
+    
+                    <div class="text-center">
+                        <div class="input-group-append">
+                            <span class="input-group-text" style="cursor: pointer;" onclick="togglePasswordVisibilitys()">
+                              <i class="fa fa-eye eye-icon" id="passwords-toggle"></i>
+                            </span>
+                          </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-sm-6 text-left">
+                            <button type="submit" class="btn btn-primary rounded-button" id="resetpass"  >Update</button>
+                        </div>
+                            <div class="col-sm-6 text-right">
+                            <button type="button" class="btn btn-secondary rounded-button cancelButtons" >Cancel</button>                        
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+  
+  
+{% endblock %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+// Your JavaScript code here
+$(document).ready(function() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var userUrl = urlParams.get('userUrl');
+  var decodeduserNames = decodeURIComponent(userUrl);
+  var key = urlParams.get('pwd');
+  alert(userUrl)
+  alert(key)
+  // Send the Ajax request
+  $.ajax({
+    url: '/edit-users',
+    method: 'GET',
+    data: {
+      userUrl: userUrl,
+      pwd: key
+    },
+    success: function(response) {
+  if (response.hasOwnProperty('error')) {
+    swal({
+      title: 'Error',
+      text: response.error,
+      icon: 'error'
+    });
+  } else {
+    console.log(response, "**RES");
+    $('#emailId').val('{{ emailId|safe }}');
+    $('#emails').val('{{ emailId|safe }}');
+    $('#userName').val('{{ userName|safe }}');
+    $('#password').val('{{ epassword|safe }}');
+    $('#userNames').val('{{ userName|safe }}');
+    $('#emailIds').val('{{ emailId|safe }}');
+    $('#userNamess').val('{{ userName|safe }}');
+    $('#userNamed').val('{{ userName|safe }}');
+    $('#passwords').val('{{ epassword|safe }}');
+    $('#passworded').val('{{ epassword|safe }}');
+    $('#hashed_passwords').val('{{ hashed_passwords|safe }}');
+    setTimeout(function() {
+      document.getElementById("userName").focus();
+    }, 0);
+  }
+},
+    error: function(xhr, status, error) {
+      console.error(error);
+    }
+  });       
+
+  $('#searchButton').on('click', function(event) {
+        event.preventDefault();
+		$('#sendModal').show();
+      });
+
+  $('#sendModal').on('click', '.close', function() {
+    $('#sendModal').hide();
+  });
+
+  $('#sendModal').on('click','.cancelButtons', function(){
+    $('#sendModal').hide();
+  });
+
+  $('#sendModalForm').on('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+    updatePassword(); // Call the function to update the password data
+  });
+  
+});
+
+function cancelButtonFunc() {
+  window.close();
+}
+
+function updatePassword() {
+  var emailIds = $('#emailIds').val();
+  var passwords = $('#passwords').val();
+  var userNamess = $('#userNamess').val();
+  var userNamed = $('#userNamed').val();
+  var passworded = $('#passworded').val();
+  var emails = $('#emails').val();
+  var hashed_passwords = $('#hashed_passwords').val();
+  var salt = $('#salt').val();
+  alert(passwords)
+  alert(hashed_passwords)
+  alert(salt)
+  $.ajax({
+    url: '/update-password-data',
+    method: 'POST',
+    data: {
+      emailIds: emailIds,
+      userNamess: userNamess,
+      passwords: passwords,
+      passworded: passworded,
+      userNamed: userNamed,
+      emails: emails,
+      hashed_passwords: hashed_passwords
+    },
+    success: function(response) {
+      console.log("Response: ", response);
+      if (response.hasOwnProperty('error')) {
+        swal('Error', response.error, 'error');
+      } else {
+        swal('Success', 'The data has been updated', 'success').then(function () {
+          window.location.href = ""; // Replace with the desired URL
+        });
+      }
+      setTimeout(function() {
+        document.getElementById("emails").focus();
+      }, 0);
+      $('#sendModal').show();
+    },
+    error: function(xhr, status, error) {
+      console.error(error);
+    }
+  });
+}
+
+
+function togglePasswordVisibilitys() {
+    var passwordInput = document.getElementById("passwords");
+    var passwordToggle = document.getElementById("passwords-toggle");
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        passwordToggle.classList.remove("fa-eye");
+        passwordToggle.classList.add("fa-eye-slash");
+    } else {
+        passwordInput.type = "password";
+        passwordToggle.classList.remove("fa-eye-slash");
+        passwordToggle.classList.add("fa-eye");
+    }
+}
+
+function togglePasswordVisibility() {
+    var passwordInput = document.getElementById("password");
+    var passwordToggle = document.getElementById("password-toggle");
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        passwordToggle.classList.remove("fa-eye");
+        passwordToggle.classList.add("fa-eye-slash");
+    } else {
+        passwordInput.type = "password";
+        passwordToggle.classList.remove("fa-eye-slash");
+        passwordToggle.classList.add("fa-eye");
+    }
+}
+</script>
+{% endblock %}

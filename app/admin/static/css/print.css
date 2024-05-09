@@ -1,0 +1,70 @@
+@media print {
+    body * {
+      visibility: hidden;
+    }
+    #update_form, #update_form *, #studentDetail, #academicDetail, #parent-detail {
+      visibility: visible;
+    }
+    #update_form {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  }
+
+
+  /* Basic styles for the form */s
+  .seminor-login-form {
+    font-family: Arial, sans-serif;
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Styles for the form container */
+  .tab-content {
+    padding: 20px;
+  }
+  
+  /* Styles for the student photo */
+  .student img {
+    width: 150px;
+    height: 140px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Styles for form labels */
+  .form-group label {
+    font-weight: bold;
+  }
+  
+  /* Styles for input fields */
+  .form-control {
+    border: 1px solid #ccc;
+    padding: 5px;
+    width: 100%;
+    margin-top: 5px;
+    font-size: 14px;
+  }
+  
+  /* Styles for the present address detail header */
+  .bg-secondary {
+    background-color: #333;
+    padding: 5px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 13px;
+  }
+  
+  /* Add some space between form sections */
+  .tab-pane {
+    margin-top: 20px;
+  }
+  
+  /* Add a page break before a new student detail section when printing */
+  .student {
+    page-break-before: always;
+  }
+  

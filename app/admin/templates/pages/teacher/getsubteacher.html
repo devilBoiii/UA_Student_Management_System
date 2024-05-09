@@ -1,0 +1,500 @@
+{% extends 'layouts/admin_mains.html' %}
+
+{% block title %} Dashboard For Hr  {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+{% endblock stylesheets %}
+
+{% block content %}
+<style>
+    .addClass, #remove_class_button{
+        display: none;
+    }
+    footer{
+        z-index: 100;
+        position: fixed;
+        bottom: 0;
+        width: 100%; 
+        background-color: #f0f0f0; 
+        padding: 10px; 
+        text-align: center; 
+        }
+    .modal-backdrop.show {
+    opacity: 0;
+    }
+    .modal-backdrop {
+    z-index: 1;
+    }
+</style>
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-lg-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="float:right"><a href="{{url_for('admin_blueprint.add_subject_teacher')}}" style="text-decoration: none;color: #fff">Add Teacher</a></button>
+
+                        <h4 class="card-title">Subject Teacher Detail</h4>
+                        <hr>
+                        <div class="card-body">
+                            <div class="row">
+                               
+                                <div class="table-responsive">
+                                    <table class="table align-items-center table-flush" id="customerList">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col" >SL</th>
+                                                <th scope="col" >CID</th>
+                                                <th scope="col" >Username</th>
+                                                <th scope="col" >Full Name</th>
+                                                <th scope="col" >Email</th>
+                                                <th scope="col" >DOB</th>
+                                                <th scope="col" >Subject</th>
+                                                <th scope="col" >Class</th>
+                                                <th scope="col" >section</th>
+                                                <th scope="col" >roles</th>
+                                                <th scope="col" style="text-align:center">action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form action="#" id="list_classteacher">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <input type="hidden" id="uu_id" name="uu_id">
+                                        <label class="form-control-label"
+                                            for="cid">CID</label>
+                                        <input type="number" name="cid" id="ciid" class="form-control" autocomplete="off" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="full_name">Full Name</label>
+                                        <input type="text" name="full_name" id="full_name" class="form-control" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="date">DOB
+                                            address</label>
+                                        <input type="date" name="date" id="date" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="username">Username</label>
+                                        <input type="text" name="username" id="username" class="form-control" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email">Email address</label>
+                                        <input type="email" name="email" id="email" class="form-control" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="details"></div>
+                            <hr>
+                            <div class="addClass " style="margin-left: 10px;">
+                                <div class="row">
+                                    <div class="form-group col-lg-4">
+                                        <label for="gradeV" class="form-control-label">Select Class</label>
+                                        <input type="hidden" name="user_detail_id" value="">
+                                        <select name="gradeV" id="gradeV" class="form-control classField" onchange="loadSection(this)">
+                                            <option value="">---Select Class---</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-lg-4">
+                                        <label for="sectionV" class="form-control-label">Select Section</label>
+                                        <select name="sectionV" id="sectionV" class="form-control" onchange="loadSubject(this)">
+                                            <option value="">---Select Section---</option>        
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-lg-4">
+                                        <label for="subjectV" class="form-control-label">Select Subject</label>
+                                        <select name="subjectV" id="subjectV" class="form-control">
+                                            <option value="">---Select Subject---</option>        
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="moreClass"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="update_sub_teacherlist_hr">Update</button>
+                        <button type="button" class="btn btn-primary" id="add_class_button">Add Class</button>
+                        <button type="button" class="btn btn-secondary" id="remove_class_button">Remove Class</button>
+                        <!-- <button type="button" class="btn btn-secondary" id="">Remove Last Class</button> -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(document).ready(function() {
+            $("#add_class_button").click(function() {
+                var clickCount = $('.addedDiv').length
+                clickCount+1;
+
+                // if (clickCount >= 2) {
+                    let newContent = $(".addClass").clone().appendTo(".moreClass").removeClass("addClass");
+                    newContent.addClass("addedDiv");
+                    newContent.find('label[for="gradeV"]').attr('for', 'grade_' + clickCount);
+                    newContent.find('#gradeV').attr('id', 'grade_' + clickCount);
+                    newContent.find('select[name="gradeV"]').attr('name', 'grade['+clickCount+']');
+                    newContent.find('input[name="user_detail_id"]').attr('name', 'user_detail_id['+clickCount+']');
+
+                    newContent.find('label[for="sectionV"]').attr('for', 'section_' + clickCount);
+                    newContent.find('#sectionV').attr('id', 'section_' + clickCount);
+                    newContent.find('select[name="sectionV"]').attr('name', 'section['+clickCount+']');
+                    
+                    newContent.find('label[for="subjectV"]').attr('for', 'subject_' + clickCount);
+                    newContent.find('#subjectV').attr('id', 'subject_' + clickCount);
+                    newContent.find('select[name="subjectV"]').attr('name', 'subject['+clickCount+']');
+
+                    loadClass(`grade_${clickCount}`);
+                    $("#remove_class_button").css("display", "block");
+                    var totalAddClass = $(".moreClass > .addClass").length + clickCount; // Get the index of the last dynamically added .addClass div
+                    console.log('Inside MoreClass: ',totalAddClass)
+                // }
+                // else {
+                //     $(".addClass").css("display", "block");
+                //     $("#remove_class_button").css("display", "block");
+                // }
+            });
+    });
+// Define a variable to hold the click count
+var removeButtonClickCount = 0;
+
+// Attach a click event handler to the remove button
+$("#remove_class_button").click(function() {
+    // Increment the click count
+    removeButtonClickCount++;
+
+    // Check if there are any 'addedDiv' elements
+    var addedDivExists = $('div.addedDiv').length > 0;
+
+    // If 'addedDiv' exists, proceed with removing the last child
+    if (addedDivExists) {
+        var lengthDiv = $('div.addedDiv').children().length;
+        console.log('LengthDiv: ', lengthDiv);
+        $('div.addedDiv').children().last().remove();
+    } else {
+        console.log('No addedDiv elements found.');
+    }
+
+        // Log the click count
+    console.log('Remove button clicked', removeButtonClickCount, 'times.');
+    });
+
+    </script>
+    
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function () {
+        loadUsers()
+    });
+    function loadUsers() {
+        $('#customerList').DataTable({
+            'processing': true,
+            'serverSide': true,
+            'bDestroy': true,
+            'serverMethod': 'POST',
+            'ajax': {
+                'url': 'hr/subjectTeacherList'
+            },
+            'columns': [
+                { data: 'sl' },
+                { data: 'cid' },
+                { data: 'username' },
+                { data: 'full_name' },
+                { data: 'email' },
+                { data: 'dob' },
+                { data: 'subject' },
+                { data: 'class_name' },
+                { data: 'section_name' },
+                { data: 'role' },
+               
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<div class="dropdown">' +
+                                '<a class="btn btn-primary btn-icon-only text-light" href="#" role="button" onclick="EditSubTeacher(\'' + full.id + '\')" style="height: auto; display: inline-block;" data-toggle="modal" data-target="#exampleModalCenter" >' +
+                                '<b> Edit </b >'  +
+                                '</a>' + 
+                                ' <a class="btn btn-danger btn-icon-only text-light" href="javascript:void(0)"  onclick="deleteTeacherList(\'' + full.id + '\')" role="button">' +
+                                '<b> Delete</b>' +
+                                '</a>' +
+                            '</div>'
+                    }
+                },
+            ],
+            language: {
+                paginate: {
+                    next: '&#8594;', // or '→'
+                    previous: '&#8592;' // or '←' 
+                }
+            },
+            "ordering": false
+        });
+    }
+
+   // edit button
+   function EditSubTeacher(id) {
+        $.get('/hr/edit-sub-teacher/' + id, function (res) {
+            const { data } = res
+            const {sections} = res
+            console.log('This is the section',sections)
+            var elements = ""
+            // console.log(data[0].subject, data)
+            // if response is json load modal and show data in field
+            $("#exampleModal").modal('show');  // Populate input fields in the modal with user data from the response
+            $("#ciid").val(data.cid);
+            $("#username").val(data.username);
+            $("#full_name").val(data.full_name);
+            $("#email").val(data.email);
+            $("#date").val(data.dob);
+            $("#uu_id").val(data.id);
+
+            // Function to append data
+function appendData() {
+    // Clear the contents of the #details container
+    $("#details").empty();
+
+    // Append data
+    sections.forEach((item, index) => {
+        $("#details").append(`
+        
+            <div class="row addedDiv">
+                <div class="col-lg-4">
+                    <div class="form-group row grade">
+                        <label class="form-control-label" for="grade_0"> Class</label>
+                        <input type="hidden" id="" name="user_detail_id[${index}]" value="${item.user_detail_id}">
+                        <select name="grade[${index}]" id="grade_${index}" class="form-control classField" onchange="loadSection(this)">
+                            <option value="${item.class_id}">${item.class}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="section_0"> Section</label>
+                        <select name="section[${index}]" id="section_${index}" onchange="loadSubject(this)" class="form-control">
+                            <option value="${item.section_id}">${item.section_name}</option>
+                        </select>
+                    </div>
+                </div>  
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="subject">Subject</label>
+                        <select name="subject[${index}]" id="subject_${index}" class="form-control">
+                            <option value="${item.subject_id}">${item.subject_name}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        `);
+        loadClass(`grade_${index}`);
+    });
+}
+// Call the function to append data
+appendData();
+        })
+    }
+
+     //for fetching the dropdown options
+
+    const loadClass = (id) => {
+        const gradeSelect = document.getElementById(`${id}`);
+        if (!gradeSelect) {
+            console.error(`Element with ID ${id} not found.`);
+            return;
+        }
+        fetch('/dropDownClass')
+            .then(response => response.json())
+            .then(data => {
+                if (!data || data.length === 0) {
+                    console.error('No data received from the server.');
+                    return;
+                }
+                // Populate the dropdown with the fetched data
+                data.forEach(classObj => {
+                    const option = document.createElement('option');
+                    option.value = classObj.id;
+                    option.textContent = classObj.name;
+                    gradeSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+
+    const loadSection = (e) => {
+        var numericPart = $(e).attr('id').split('_')[1];
+    var grade = $("#grade_" + numericPart).val();
+    var $sectionSelect = $("#section_" + numericPart);
+    var $subjectSelect = $("#subject_" + numericPart);
+
+    // Clear existing options before fetching and adding new ones
+    $sectionSelect.empty();
+    $subjectSelect.empty();
+
+    fetch('/get_section/' + grade)
+        .then(response => response.json())
+        .then(data => {
+            data.sort((a, b) => a.name.localeCompare(b.name));
+            data.forEach((item, index) => {
+                $sectionSelect.append(`<option value="${item.id}">${item.name}</option>`);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    }
+    const loadSubject = (e) => {
+    var numericPart = $(e).attr('id').split('_')[1];
+    var section = $('#section_' + numericPart).val();
+    var $subjectSelect = $('#subject_' + numericPart);
+
+    // Clear existing options before fetching and adding new ones
+    $subjectSelect.empty();
+
+    fetch('/get_subjects/' + section)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach((item, index) => {
+                $subjectSelect.append(`<option value="${item.id}">${item.name}</option>`);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    }
+
+    // updating teacher
+    $("#update_sub_teacherlist_hr").click(function () {
+        var form_data = new FormData($('#list_classteacher')[0]);
+        $("#update_teacherlist").text("Loading...");
+        $.ajax({
+            type: "POST",
+            url: "/check_class_sub_sec",
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (response) {
+                if (!response.exists) {
+                    updateSubjectTeacher();
+                } else {
+                    swal('Error', 'Subject Teacher already exists', 'error').then(function () {
+                        location.reload();
+                    });
+                }
+            },
+            error: function () {
+                swal('Error', 'Could Not Check Subject Teacher', 'error').then(function () {
+                    location.reload();
+                });
+            }
+        });
+    });
+    
+    function updateSubjectTeacher() {
+        var form_data = new FormData($('#list_classteacher')[0]);
+        $.ajax({
+            type: "POST",
+            url: "/updating_sub_teacherlist_hr",
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data) {
+                if (data === "errorFound") {
+                    swal('Error', 'Could Not Update', 'error').then(function () {
+                        location.reload();
+                    });
+                } else {
+                    swal('Success', 'Successfully Updated', 'success').then(function () {
+                        location.reload();
+                    });
+                }
+            },
+            error: function () {
+                swal('Error', 'Could Not update Subject Teacher', 'error').then(function () {
+                    location.reload();
+                });
+            }
+        });
+    }
+    
+    // teacher delete
+
+    function deleteTeacherList(id) {
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this data!",
+            type: "warning",
+            showCancelButton: true,
+            showConfirmButton: true
+        }).then(function (isConfirm) {
+            if (isConfirm == true) {
+                $.ajax({
+                    url: '/subDeleteTeacher/' + id,
+                    type: 'POST',
+                    success: function (res) {
+                        console.log(res)
+                        if(res === "done"){
+                            swal({
+                            title: 'Success!',
+                            text: 'User delete successful!',
+                            type: 'success'
+                        }).then(function () {
+                            location.reload()
+                        });
+                        }
+                        else{
+                        }
+                    },
+                    error: function () {
+                        swal("Error", "Error while deleting user. Refresh page and try again :)", "error");
+                    }
+                })
+            } else {
+                swal("Cancelled", "Your data is safe :)", "error");
+            }
+        })
+    }
+</script>
+{% endblock javascripts %}

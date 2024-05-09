@@ -1,0 +1,237 @@
+{% extends 'layouts/class_teacher_main.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+{% endblock stylesheets %}
+
+{% block content %}
+<!-- partial:../../partials/_navbar.html -->
+
+<!-- partial -->
+
+<!-- partial:../../partials/_settings-panel.html -->
+
+
+<!-- partial -->
+<!-- partial:../../partials/_sidebar.html -->
+
+<!-- partial -->
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Add Student In Class</h4>
+                        <hr>
+                        <form action="" id="add_student" method="POST"><br>
+                            <div class="row"> 
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label col-sm-4 text-right">Citizenship Identity Card :</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" placeholder="Enter cid number" class="form-control" name="cid" id="cid">
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="user_id" name="user_id" value="{{current_user.id}}">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label col-sm-4 text-right">Index Number :</label>
+                                        <div class="col-sm-8">
+                                             <input type="text" placeholder="enter index number" class="form-control"name="index_num" id="index_num">
+                                        </div>
+                                    </div>
+                                </div>
+                                    <br>
+                                <div class="col-md-12 mt-10" style="text-align:center;">
+                                    <button type="submit" class="btn btn-warning text-light"> Search</button> 
+                                </div> <br><br>
+                            </div>
+                        </form>
+                        
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table align-items-center table-flush" id="customerList">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col" class="sort" data-sort="name">SL</th>
+                                                <th scope="col" class="sort" data-sort="name">Index Number</th>
+                                                <th scope="col" class="sort" data-sort="budget">CID</th>
+                                                <th scope="col" class="sort" data-sort="name">Student Name</th>
+                                                <th scope="col" class="sort" data-sort="name">Email</th>
+                                                <th scope="col">action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list" id="add_std">
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- content-wrapper ends -->
+<!-- partial:../../partials/_footer.html -->
+
+<!-- partial -->
+<!-- main-panel ends -->
+
+<!-- page-body-wrapper ends -->
+
+<!-- container-scroller -->
+<!-- plugins:js -->
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    // $("#add_student").on("submit", function (e) {
+    //     e.preventDefault(e);
+    //     var form_data = new FormData($('#add_student')[0])
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: "/search-for-std",
+    //         data: form_data,
+    //         contentType: false,
+    //         cache: false,
+    //         processData: false,
+    //         success: function (res) {
+    //             const { aaData } = res;
+    //             $("#add_std").append(' <tr><td>' + aaData[0].sl + '</td><td>' + aaData[0].index_number + '</td><td>' + aaData[0].student_cid + '</td><td>' + aaData[0].first_name + ' ' + aaData[0].last_name + '</td><td>' + aaData[0].student_email + '</td><td>' + '<a class="btn btn-sm btn-icon-only text-light" id="add_new_std" role="button" style="background:orange">' +
+    //                 '<b>Add</b>' +
+    //                 '</a>' + '</td></tr>')
+
+    //             $("#add_new_std").click(function () {
+    //                 var form_data = new FormData($('#add_student')[0])
+    //                 $.ajax({
+    //                     type: "POST",
+    //                     url: "/update-std-details",
+    //                     data: form_data,
+    //                     contentType: false,
+    //                     cache: false,
+    //                     processData: false,
+
+    //                     success: function (data) {
+    //                         if (data === "error") {
+    //                             swal('Error', 'Could Not Add Student', 'error').then(function () {
+    //                                 location.reload()
+    //                             })
+    //                         } else {
+    //                             swal('Success', 'Student Successfully Added', 'success').then(function () {
+    //                                 window.location = "/get-std-list"
+    //                             })
+    //                         }
+
+    //                     },
+    //                     error: function () {
+    //                         swal('Error', 'Could Not Add Student', 'error').then(function () {
+    //                             location.reload()
+    //                         })
+    //                     }
+    //                 });
+    //             });
+
+    //         }
+
+    //     });
+    // });
+    
+$("#add_student").on("submit", function (e) {
+  e.preventDefault();
+
+  var form_data = new FormData($('#add_student')[0]);
+
+  $.ajax({
+    type: 'POST',
+    url: "/search-for-std",
+    data: form_data,
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: function (res) {
+      const { aaData, error } = res;
+      if (error) {
+        swal('Error', error, 'error');
+      } 
+    //   if (res.hasOwnProperty("error")) {
+    //             swal('Error', response.error, 'error');
+    //         }
+       else {
+        var firstData = aaData[0];
+        var sl = firstData.sl;
+        var indexNumber = firstData.index_number;
+        var studentCid = firstData.student_cid;
+        var fullName = firstData.first_name + ' ' + firstData.last_name;
+        var studentEmail = firstData.student_email;
+        // Clear the existing table content
+        $("#add_std").empty();
+        // Append the first item to the table
+        $("#add_std").append('<tr><td>' + sl + '</td><td>' + indexNumber + '</td><td>' + studentCid + '</td><td>' + fullName + '</td><td>' + studentEmail + '</td><td>' + '<a class="btn btn-sm btn-icon-only text-light add_new_std" role="button" style="background:orange">' +
+          '<b>Add</b>' +
+          '</a>' + '</td></tr>');
+      }
+    },
+    error: function (xhr, status, error) {
+   swal('Error', 'Could Not Perform Search: ' + error, 'error').then(function () {
+    location.reload();
+  });
+}
+  });
+});
+
+// Event delegation for .add_new_std click event
+$("#add_std").on("click", ".add_new_std", function () {
+  var form_data = new FormData($('#add_student')[0]);
+  $.ajax({
+    type: "POST",
+    url: "/update-std-details",
+    data: form_data,
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: function (data) {
+    if (data.hasOwnProperty("error")) {
+        swal('Error', data.error, 'error');
+    } 
+    //   if (data === "error") {
+    //     swal('Error', 'Could Not Add Student', 'error').then(function () {
+    //       location.reload();
+    //     });
+    //   } 
+    else {
+        swal('Success', 'Student Successfully Added', 'success').then(function () {
+          window.location = "/get-std-list";
+        });
+      }
+    },
+    error: function () {
+      swal('Error', 'Could Not Add Student', 'error').then(function () {
+        location.reload();
+      });
+    }
+  });
+});
+
+</script>
+
+{% endblock javascripts %}

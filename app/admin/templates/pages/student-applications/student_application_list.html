@@ -1,0 +1,174 @@
+{% extends 'layouts/admin_mains.html' %}
+
+{% block title %} Dashboard For Bank Users {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- partial -->
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Student Application List</h4>
+            <hr>
+
+            <!-- <div>
+                <p>Classes:</p>
+                <ul>
+                    {% for admission_class in admission_classes %}
+                        <li>{{ admission_class }}</li>
+                    {% endfor %}
+                </ul>
+            </div> -->
+        
+            <!-- <div class="row">
+                <div class="col-md-12 mb-4">
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="1">Class 7</button>
+                    <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="2">Class 8</button>
+                    <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="3">Class 9</button>
+                    <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="4">Class 10</button>
+                    <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="5">Class 11Sci</button>
+                    <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="6">Class 11Com</button>
+                    <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="7">Class 11Arts</button>
+                    <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="8">Class 12Sci</button>
+                    <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="9">Class 12Com</button>
+                    <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="10">Class 12Arts</button>
+                  </div>
+                </div>
+            </div> -->
+            
+            <div class="card-body">
+              <div class="row">
+                  <div class="table-responsive">
+                      <table class="table align-items-center table-flush" id="customerList" style="width: 100%;">
+                          <thead class="thead-light">
+                          <tr>
+                              <th scope="col" class="sort" data-sort="name">SL</th>
+                              <th scope="col" class="sort" data-sort="name">Stduent Code </th>
+                              <th scope="col" class="sort" data-sort="budget">CID</th>
+                              <th scope="col" class="sort" data-sort="name">Student Name</th>
+                              <th scope="col" class="sort" data-sort="name">Email</th>
+                              <th scope="col" class="sort" data-sort="name">Status</th>
+                              <th scope="col">action</th>
+                          </tr>
+                          </thead>
+                          <tbody class="list">
+                            </tbody>
+                      </table>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+var selectedClass = null; // Global variable to store the selected class
+
+$(document).ready(function() {
+    loadUsers(); // Initially load all users
+
+    // Add click event handler for class buttons
+    $('.class-btn').on('click', function() {
+        selectedClass = $(this).data('class');
+        loadUsers(selectedClass);
+    });
+});
+
+function loadUsers(classFilter) {
+    // Use classFilter parameter to filter the data by class
+    $('#customerList').DataTable({
+        'processing': true,
+        'serverSide': true,
+        'bDestroy': true,
+        'serverMethod': 'POST',
+        'ajax': {
+            'url': '/users-std',
+            'data': { 'class': classFilter } // Send the selected class to the server
+        },
+        'columns': [
+            { data: 'sl' },
+            { data: 'student_code' },
+            { data: 'student_cid' },
+            { data: 'first_name' },
+            { data: 'student_email' },
+            { data: 'status' },
+            {
+                "render": function(data, type, full, meta) {
+                    return '<div class="dropdown">' +
+                        '<a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background:orange">' +
+                            '<b>Click</b>' +
+                        '</a>' +
+                        '<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">' +
+                            '<a class="dropdown-item" href="/std-detials/' + full.id + '">View</a>' +
+                            '<a class="dropdown-item" href="javascript:void(0)" onclick="deleteUser(\'' + full.id + '\')">Delete</a>' +
+                        '</div>' +
+                    '</div>'
+                }
+            },
+        ],
+        language: {
+            paginate: {
+                next: '&#8594;',
+                previous: '&#8592;'
+            }
+        },
+        "ordering": false
+    });
+}   
+
+function deleteUser(id) {
+    swal({
+        title: "Are you sure?",
+        text: "You will not be able to recover this data!",
+        type: "warning",
+        showCancelButton: true,
+        showConfirmButton: true
+    }).then(function(isConfirm) {
+        console.log(isConfirm)
+        if (isConfirm) {
+            $.ajax({
+                url: '/deleteUser/' + id,
+                type: 'POST',
+                success: function() {
+                    swal({
+                        title: 'Success!',
+                        text: 'User delete successful!',
+                        type: 'success'
+                    }).then(function() {
+                        loadUsers();
+                    });
+                },
+                error: function() {
+                    swal("Error", "Error while deleting user. Refresh page and try again :)", "error");
+                }
+            });
+        } else {
+            swal("Cancelled", "Your data is safe :)", "error");
+        }
+    });
+}
+</script>
+
+{% endblock javascripts %}

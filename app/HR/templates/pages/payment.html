@@ -1,0 +1,745 @@
+{% extends 'layouts/hr_main.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+<!-- Specific CSS goes HERE -->
+ <!-- Include Fancybox CSS -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">{% block stylesheets %}
+<style>
+  /* Custom CSS to adjust the modal height */
+  #sendModal .modal-body {
+    max-height: 60vh;
+    /* Adjust this value to your desired height */
+    overflow-y: auto;
+  }
+  
+  .table-container {
+  overflow-x: auto; /* Enable horizontal scrolling */
+  max-width: 100%; /* Optional: Limit the width of the container */
+}
+
+
+/* Keep the existing styles */
+.thumb-img-mark {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    cursor: zoom-in;
+    transition: transform 0.3s ease-in-out;
+    display: block; /* Change display to inline-block */
+    margin: 0 auto;
+}
+
+
+.zoomed {
+    cursor: zoom-out;
+    transform: scale(2); /* Adjust the zoom level as needed */
+    max-height: none !important;
+}
+.dataTables_wrapper .dataTable thead .sorting:after, .dataTables_wrapper .dataTable thead .sorting_asc:after, .dataTables_wrapper .dataTable thead .sorting_desc:after, .dataTables_wrapper .dataTable thead .sorting_asc_disabled:after, .dataTables_wrapper .dataTable thead .sorting_desc_disabled:after{
+    content: "";
+    right: 1.2em;
+    top: 0;
+}
+.dataTables_wrapper .dataTable thead .sorting:before, .dataTables_wrapper .dataTable thead .sorting_asc:before, .dataTables_wrapper .dataTable thead .sorting_desc:before, .dataTables_wrapper .dataTable thead .sorting_asc_disabled:before, .dataTables_wrapper .dataTable thead .sorting_desc_disabled:before {
+    content: "";
+    right: 1.2em;
+    bottom: 0;
+}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<!-- partial:../../partials/_navbar.html -->
+
+<!-- partial -->
+
+<!-- partial:../../partials/_settings-panel.html -->
+
+
+<!-- partial -->
+<!-- partial:../../partials/_sidebar.html -->
+
+<!-- partial -->
+
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="row">
+      <!-- <div class="col-12 grid-margin stretch-card"> -->
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Payment Details ({{paymentmodes}} Payment)</h4>
+          <hr>
+          <div class="card-body">
+            <div class="row table-container" >
+              <!-- <div class="table-responsive" id="paymentHistory" style="display: none;"> -->
+              <table id="accountTable" class="table table-sm table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col" class="installment-hidden">Sl No.</th>
+                    <th scope="col" class="installment-hidden">Student CID</th>
+                    <th scope="col" class="installment-hidden">Student Name</th>
+                    <th scope="col" class="installment-hidden">Class</th>
+                    <th scope="col" class="installment-hidden">Account Holder's Name</th>
+                    <th scope="col" class="installment-hidden">Bank Type</th>
+                    <th scope="col" class="installment-hidden">Journal No.</th>
+                    <th scope="col" class="installment-hidden">Amount</th>
+                    <th scope="col" class="installment-hidden">Payment Mode</th>
+                    <th scope="col" class="installment-hidden">ScreenShot View</th>
+                    <th scope="col" class="action-column">Action</th>
+                   
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Rows will be added dynamically using JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Add the closing div tag for the "row" -->
+    </div>
+  </div>
+</div>
+<!-- Add the closing div tag for the "main-panel" -->
+
+
+<div class="modal" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="sendModalLabel" aria-hidden="true"
+  data-backdrop="false">
+  <div class="modal-dialog modal-md"> <!-- Change modal-lg to modal-md -->
+    <div class="modal-content">
+      <form id="sendModalForm">
+        <div class="modal-header d-flex justify-content-between align-items-center">
+          <h5 class="modal-title" id="sendModalLabel">Student Detail</h5>
+          <button type="button" class="close" data-dismiss="modal"
+            style="font-size: 30px; font-weight: bold;">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row"> <!-- Use form-row to align contents in one row -->
+            <div class="form-group col-md-6">
+              <label for="stdCid">Student CID</label>
+              <input id="stdCid" class="form-control" readonly name="stdCid">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="stdName">Student Name</label>
+              <input id="stdName" class="form-control" readonly name="stdName">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="class">Class</label>
+              <input id="class" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="boarder">Accomodation</label>
+              <input id="boarder" class="form-control" readonly>
+            </div>
+
+            <div class="form-group col-md-6" id="section_group">
+              <div class="form-group">
+                <label class="form-control-label" for="section">Section</label>
+                <select name="section" id="section" class="form-control" name="section">
+                  <option value="">---Select Section---</option>
+                </select>
+                <span class="text-danger" id="sectionError" style="display: none;">Please select a section</span>
+              </div>
+            </div>
+
+
+            <div class="form-group col-md-6" id="hostel_group">
+              <div class="form-group">
+                <label class="form-control-label" for="hostel">Hostel</label>
+                <select name="hostel" id="hostel" class="form-control" name="hostel">
+                  <option value="">---Select Hostel---</option>
+                </select>
+                <span class="text-danger" id="hostelError" style="display: none;">Please select a Hostel.</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="assignSection">Assign Section</button>
+          <button type="button" class="btn btn-danger">Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+                Screenshot View</h5>
+            <button type="button" class="close" data-dismiss="modal"
+                aria-label="Close" onclick="reloadPage()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+          <div class="col-md-12 col-lg-12">
+            <div class="gal-detail thumb">
+                <img class="thumb-img-mark" id="zoomImage" alt="Screenshot Image" style="height: 280px; width: 200px;transform: scale(1.2);">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"
+                data-dismiss="modal" onclick="reloadPage()">Close</button>
+        </div>
+    </div>
+</div>
+</div>
+<!-- end modal -->
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->{% block javascripts %}
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!-- Include Fancybox JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+<script>
+  function reloadPage(){
+    location.reload();
+  }
+</script>
+<script>   
+  const zoomImage = document.getElementById('zoomImage');
+const exampleModal = document.getElementById('exampleModal');
+
+zoomImage.addEventListener('click', (event) => {
+    event.stopPropagation();
+    zoomImage.classList.toggle('zoomed');
+});
+
+  $(document).ready(function () {
+    $.ajax({
+            type: 'GET',
+            url: '/dropdownHostel',
+            success: function(response) {
+              // Assuming response is the JSON array containing dropdown values
+              var dropdownValues = response;
+              dropdownValues.sort(function(a, b) {
+                return a.name.localeCompare(b.name);
+              });
+              var selectElement = $('#hostel'); // Select the element by its ID
+              // Loop through the dropdown values and create option elements
+              for (var i = 0; i < dropdownValues.length; i++) {
+                var option = $('<option></option>');
+                option.val(dropdownValues[i].id);
+                option.text(dropdownValues[i].name);
+                selectElement.append(option);
+              }
+            },
+            error: function() {
+                console.log('Error For General');
+
+              // Handle error case
+            }
+          });
+
+    var paymentmodes = "{{ paymentmodes }}";
+    var dataTable = $('#accountTable').DataTable({
+      responsive: true,
+      //autoWidth: false, // Disable auto width calculation
+      scrollX: true, // Initially set to false
+      deferRender: true, // This can improve rendering performance
+      
+      columnDefs: [
+            { targets: [0, 1, 2, 3, 4, 5, 6, 7], visible: true }
+        ]
+    });
+    
+    loadUsers(paymentmodes, dataTable);
+   
+  function loadUsers(paymentmodes, dataTable) {
+    //dataTable.clear();
+    var url = '/summit_fees';
+    var requestData = {
+      paymentmodes: paymentmodes
+    };
+
+    $.ajax({
+      type: 'GET',
+      url: url,
+      data: requestData,
+      success: function (response) {
+        let history=[];
+          let otherDataArray=[];
+          for (let z = 0; z < response.data.length; z++) {
+            history.push(response.data[z]);
+          }
+          console.log(history,'**HISTORY');
+        if (paymentmodes === 'Installment') {
+        
+          // Destroy the DataTable to reconfigure columns
+    // Destroy the DataTable if it already exists
+    if ($.fn.DataTable.isDataTable('#accountTable')) {
+          $('#accountTable').DataTable().destroy();
+        }        
+          dataTable.columns('.installment-hidden').visible(false);
+          dataTable.column('.action-column').visible(false);
+          let maxInstallments = 0;
+          let installmentKeys = [];
+          let installmentDataArray = [];
+          const keyOrder = ["Sl No.", "Student CID", "Student Name", "Class"];
+      otherDataArray = history.map((item) => {
+        const newItem = {};
+        keyOrder.forEach((key) => {
+        if (item.hasOwnProperty(key)) {
+            newItem[key] = item[key];
+        }
+    });
+        return newItem;
+      });
+
+    console.log(otherDataArray,'***APPLE');
+    const installmentSubHeadersOrder=["Account Holder", "Amount", "Bank Type", "Journal No.", "Payment Mode", "Screenshot"];
+// Map 'Installments' data to each 'Sl No.' object from the 'history' array
+installmentDataArray = history.map((item) => {
+    const slNo = item['Student CID'];
+    const installments = item['Installments'];
+
+    const newInstallments = installments.map((installment) => {
+        const newInstallment = {};
+        installmentSubHeadersOrder.forEach((key) => {
+            if (installment.hasOwnProperty(key)) {
+                newInstallment[key] = installment[key];
+            }
+        });
+        return newInstallment;
+    });
+
+    return { slNo, installments: newInstallments };
+});
+
+ for (let i = 0; i < history.length; i++) {
+    const entry = history[i];
+    const installments = entry['Installments'];
+    if (installments && installments.length > 0) {
+      installmentKeys= Object.keys(installments[0]);
+    }
+  }
+          console.log(installmentKeys, '**ONSKY');
+          console.log(installmentDataArray, "##in");
+          console.log(otherDataArray, '**OTHDARA');
+          console.log(history,'***HISTORU');
+          populateDynamicHeaders(otherDataArray,installmentDataArray, installmentKeys, response,dataTable);                 
+          // Populate data for sub-columns
+        }
+
+      else if (paymentmodes === 'Full') {
+      dataTable.clear();
+      dataTable.columns('.installment-hidden').visible(true);
+      dataTable.column('.action-column').visible(false);      
+      for (let i = 0; i < response.data.length; i++) {
+          let history = response.data[i];
+          let row = [
+              i + 1,
+              history['Student CID'],
+              history['Student Name'],
+              history['Class'],
+              history['Account Holder'],
+              history['Bank Type'],
+              history['Journal No.'],
+              history['Amount'],
+              history['Payment Mode'],
+              '<center><button class="payment-for-Full btn btn-primary text-light text-center" data-toggle="modal" data-target="#exampleModal" data-id="' + i + '">View</button></center>',
+              ''
+               // Add an empty cell for the hidden 'Action' column
+          ];
+
+          dataTable.row.add(row);
+      }
+          
+    const screenshotArray = history.map((item) => {
+      const slNo = item['Student CID'];
+      const screenshot = item['Screenshot'];
+      return { slNo, screenshot };
+    });
+    console.log(screenshotArray,'**fULL');
+      // Assuming response.data[i]['Screen Shot'] contains the image URL
+$(document).on('click', '.payment-for-Full', function() {
+    let clickedIndex = $(this).data('id');
+    let studentCID = response.data[clickedIndex]['Student CID'];
+
+    // Find the screenshot URL corresponding to the clicked Student CID
+    let screenshotData = screenshotArray.find(item => item.slNo === studentCID);
+    let imageSrc = screenshotData ? screenshotData.screenshot : ''; // Set to empty string if screenshot is null
+
+    // Update the src attribute of the img element
+    $('.thumb-img-mark').attr('src', imageSrc);
+
+    // Open the modal
+    $('#exampleModal').modal('show');
+});
+      dataTable.columns.adjust().draw();
+  }
+
+else {
+          // For other payment modes, show the static columns used by other paymentmodes
+          dataTable.clear();
+          dataTable.columns('.installment-hidden').visible(true);
+          dataTable.column('.action-column').visible(true);
+          // Rest of the code remains the same
+          for (let i = 0; i < response.data.length; i++) {
+            let history = response.data[i];
+            let row = [
+              i + 1,
+              history['Student CID'],
+              history['Student Name'],
+              history['Class'],
+              history['Account Holder'],
+              history['Bank Type'],
+              history['Journal No.'],
+              history['Amount'],
+              history['Payment Mode']
+            ];
+            console.log(history['Journal No.'],'***JRNK');
+            console.log(history['Amount'],'**AMOn');
+            row.push('<button class="payment-for-SeatConfirm btn btn-primary text-light text-center" data-toggle="modal" data-target="#exampleModal" data-id="' + i + '">View</button>');
+            row.push('<button class="action-button btn btn-warning text-light text-center" data-id="' + i + '">Edit</button>');
+            // Append the row to the table body
+            dataTable.row.add(row);
+          }
+      const screenshotArray = history.map((item) => {
+      const slNo = item['Student CID'];
+      const screenshot = item['Screenshot'];
+      return { slNo, screenshot };
+    });
+    console.log(screenshotArray,'**Seat');
+      dataTable.columns.adjust().draw();
+           // Assuming response.data[i]['Screen Shot'] contains the image URL
+$(document).on('click', '.payment-for-SeatConfirm', function() {
+    let clickedIndex = $(this).data('id');
+    let studentCID = response.data[clickedIndex]['Student CID'];
+
+    // Find the screenshot URL corresponding to the clicked Student CID
+    let screenshotData = screenshotArray.find(item => item.slNo === studentCID);
+    let imageSrc = screenshotData ? screenshotData.screenshot : ''; // Set to empty string if screenshot is null
+
+    // Update the src attribute of the img element
+    $('.thumb-img-mark').attr('src', imageSrc);
+
+    // Open the modal
+    $('#exampleModal').modal('show');
+    
+});
+
+        }
+        
+        // Redraw the table
+      },
+      error: function () {
+        swal("An error occurred while retrieving the payment history.", "", "error");
+        clearFields(); // Clear names and hide fields
+      }
+    });
+
+  }
+
+  
+  function populateDynamicHeaders(otherDataArray, installmentDataArray,installmentKeys, response, dataTable) {
+    const keyOrder = ["Sl No.", "Student CID","Student Name", "Class"];
+    const installmentSubHeadersOrder=["Account Holder", "Amount", "Bank Type", "Journal No.", "Screenshot"];
+  const mainTable = $('#accountTable');
+  const subHeaderRow = $('<tr></tr>');
+  const otherDataKeys = [];
+  const dataTableExists = $.fn.DataTable.isDataTable(mainTable);
+  if (dataTableExists) {
+    mainTable.DataTable().clear().destroy();
+  } 
+  else {
+    mainTable.html('');
+  }
+  // Create the main header row
+  let headerRow = $('<tr></tr>');
+
+  // Append headers for keys present in otherDataArray
+  for (let i = 0; i < keyOrder.length; i++) {
+    let key = keyOrder[i];
+      let th = $('<th style="padding-top:.8em;padding-left:1.3em;">' + key + '</th>');
+      headerRow.append(th);
+  }
+  
+  // Add empty cells for "Sl No.", "Student CID", "Index Number", and "Student Name"
+  for (let i = 0; i < keyOrder.length; i++) {
+    let emptyTh = $('<th></th>');
+    subHeaderRow.append(emptyTh);
+  }
+  // Create sub-header columns for each Installment and their respective sub-headers
+  for (let i = 0; i < 4; i++) {
+    const headerTitle = 'Installment ' + (i + 1);
+
+    // Create the sub-header column for the Installment
+    const installmentTh = $('<th colspan="5" style="text-align:center;border-bottom:1px solid grey;font-size:1.1em;">' + headerTitle + '</th>');
+    headerRow.append(installmentTh);
+    for (let kk=0;kk<installmentSubHeadersOrder.length;kk++) {
+      const subHeaderTh = $('<th style="padding-left:1.3em;border-bottom:1px solid grey;">' + installmentSubHeadersOrder[kk] + '</th>');
+      subHeaderRow.append(subHeaderTh);
+    }
+  }
+
+  // Append the subHeaderRow to the mainTable
+  mainTable.append($('<thead></thead>').append(headerRow).append(subHeaderRow));
+
+    // Create an object to keep track of the sub-header counts for each Installment header
+  const subHeaderCounts = {};
+// Populate data into the table
+const row = $('<tr></tr>');
+
+// Populate main data
+for (let i = 0; i < otherDataArray.length; i++) {
+  const otherDataItem = otherDataArray[i];
+  const slNo = otherDataItem['Student CID'];
+  const installmentDataItem = installmentDataArray.find(item => item.slNo === slNo);
+  // Group installmentDataArray by slNo
+const installmentDataGrouped = {};
+for (const item of installmentDataArray) {
+  const slNo = item.slNo;
+  if (!installmentDataGrouped[slNo]) {
+    installmentDataGrouped[slNo] = [];
+  }
+  installmentDataGrouped[slNo].push(item);
+}
+
+console.log(installmentDataGrouped,'***HASAMAMA');
+  const installments = installmentDataGrouped ? installmentDataItem.installments : [];
+  const maxSubHeaders = Math.max(installments.length, 1);
+  const row = $('<tr></tr>');
+  for (const key in otherDataItem) {
+    if(key){
+    const td = $('<td style="text-align:center;border-top:1px solid grey; border-bottom:1px solid #d5d7db;">' + otherDataItem[key] + '</td>');
+    row.append(td);
+    }
+    else{
+    row.append('');
+    }
+  }
+  
+  for (let j = 0; j < 4; j++) {
+    const installment = installments[j] || {};
+    console.log(installment,'*tyty');
+    for (let k = 1; k < installmentKeys.length; k++) {
+      const key = installmentKeys[k];
+      // const td = $('<td>' + (installment[key] || '') + '</td>');
+      // Add the button element under "ScreenShot" sub-headers
+      const installmentValues = [];
+  if (key === 'Screenshot') {
+  if (installment['Screenshot']) {
+    const button = $('<button class="payment-for-Installment btn btn-primary text-light text-center" data-toggle="modal" data-target="#exampleModal" data-screenshot="' + installment['Screenshot'] + '">View</button>');
+     td = $('<td style="text-align:center;border-top:1px solid grey;border-bottom:1px solid grey;"></td>').append(button);
+    row.append(td);
+  } 
+  else {
+    const td = $('<td></td>'); // Empty cell for no data
+    row.append(td);
+  }
+} else {
+  const value = installment[key];
+   let checkCount=installments.length;
+   if(installment[key]){
+    installmentValues.push(value);
+   }
+   else{
+    installmentValues.push('');
+   }
+
+  for (const value of installmentValues) {
+    const tdValue = $('<td style="text-align: center;border-bottom:1px solid grey;">' + value + '</td>');
+    row.append(tdValue);
+  }
+} 
+    }
+  }
+
+  mainTable.DataTable().row.add(row);
+
+}
+
+$(document).on('click', '.payment-for-Installment', function() {
+  const screenshotUrl = $(this).data('screenshot');
+  console.log(screenshotUrl,'**URL');
+  if (screenshotUrl) {
+    // Update the src attribute of the img element
+    $('.thumb-img-mark').attr('src', screenshotUrl);
+
+    // Open the modal
+    $('#exampleModal').modal('show');
+  } else {
+    console.log("Screenshot URL not found");
+  }
+});
+
+  // Populate main headers data
+  // Draw the DataTable without recalculating the layout
+mainTable.DataTable().draw();
+
+}
+
+$('#sendModal').on('shown.bs.modal', function () {
+        let stdCid = $('#stdCid').val();
+        console.log("THis is the CID:  ", stdCid)
+      $('#hostel').on('change', function(){
+        let selectedHostel = $(this).val();
+        if(selectedHostel != ''){
+          $('#hostelError').hide();
+          $('#hostel_group').removeClass('has-danger');
+        }
+      });
+      $('#section').on('change', function () {
+        let selectedSection = $(this).val();
+        if (selectedSection != '') {
+          // If a section is selected, hide the error message and remove the 'has-danger' class
+          $('#sectionError').hide();
+          $('#section_group').removeClass('has-danger');
+        }
+      });
+
+      $.ajax({
+        type: 'GET',
+        url: '/getModalDetails',
+        data: { stdCid: stdCid },
+        success: function (response) {
+          // Handle the response from the server
+          let className = response.class_name; // Corrected key
+          let sections = response.sections; // Corrected key
+          let hostel=response.boarder; 
+          let boarders=[]
+          for(let i=0;i<hostel.length;i++){
+            boarders.push(hostel[i]);
+            break;
+          }
+          console.log("****REs**", response.class_name);
+          console.log("**section**", response.sections);
+          console.log(boarders, "**RES");
+          // Update the input values in the modal
+          $('#class').val(className);
+          $('#section').empty();
+          $('#boarder').val(boarders);
+          const boarderArray=boarders[0];
+          if(boarderArray==='Boarder'){
+            $('#hostel_group').show();
+          }
+          else{
+            $('#hostel_group').hide();
+          }
+          // Create and append new options for each section
+          let selectSection = $('#section');
+          selectSection.append('<option value="">---Select Section---</option>'); // Add default option
+
+          // Add options for each section
+          sections.forEach(function (section, index) {
+            // Set the section_id as a data attribute
+            var section_id = response.section_id[index];
+            selectSection.append('<option value="' + section + '" data-section-id="' + section_id + '">' + section + '</option>');
+          });
+        },
+        error: function (error) {
+          swal("An error occurred while retrieving student details.", "", "error");
+        }
+      });
+
+    });
+    $('#sendModal .close').on('click', function () {
+      $('#sendModal').modal('hide');
+    });
+    $('#modalClose').on('click', function () {
+      // Hide the modal
+      $('#sendModal').modal('hide');
+    });
+
+
+  $('#accountTable').on('click', '.action-button', function () {
+    var rowData = $(this).closest('tr').find('td').map(function () {
+      return $(this).text();
+    }).get();
+    // Set values in the modal inputs
+    $('#stdCid').val(rowData[1]); // Assuming Student CID is in the second column
+    $('#stdName').val(rowData[2]); // Assuming Student Name is in the third column
+    $('#sendModal').modal('show');
+  });
+
+  });
+
+
+  // Add an event listener to the "Assign Section" button
+  $('#assignSection').on('click', function () {
+    // Gather the data from the modal fields
+    let stdCid = $('#stdCid').val();
+    let indexNumber = $('#indexNumber').val();
+    let className = $('#class').val();
+    let selectedSection = $('#section').val();
+    let selectedSectionOption = $('#section').find(':selected');
+    let selectedSectionId = selectedSectionOption.data('section-id');
+    let selectedHostel=$('#hostel').val();
+    let accomodation=$('#boarder').val();
+    let returnVal = false;
+     // Reset error states
+$('#sectionError').hide();
+$('#section_group').removeClass('has-danger');
+
+//$('#hostelError').hide();
+$('#hostel_group').removeClass('has-danger');
+
+    if(accomodation =="Boarder"){
+        if (selectedHostel == '') {
+          $('#hostelError').show();
+          $('#hostel_group').addClass('has-danger');
+          returnVal = true;
+        }else{
+          $('#hostelError').hide();
+          $('#hostel_group').removeClass('has-danger');
+        }
+    }
+    
+    if (returnVal) {
+      return false; // Prevent form submission
+    }
+
+    // Create a data object with this information
+    let requestData = {
+      stdCid: stdCid,
+      selectedSectionId: selectedSectionId,
+      selectedHostel: selectedHostel,
+      accomodation:accomodation
+    };
+    // Use AJAX to send the data to the server
+    $.ajax({
+      type: 'POST', // Or 'GET' depending on your server-side implementation
+      url: '/assignSection', // Replace with the actual server endpoint
+      data: requestData,
+      success: function (response) {
+        debugger;
+        if (response.hasOwnProperty("error")) {
+          swal('Error', response.error, 'error');
+        } else {
+          swal('Success', 'Update Successful!', 'success').then(function () {
+            window.location = "";
+          });
+        }
+      },
+      error: function (error) {
+        // Handle any errors that occurred during the AJAX request
+        swal("Error", "An error occurred while assigning section.", "error");
+      }
+    });
+
+    // Close the modal after the data is sent
+    $('#sendModal').modal('hide');
+  });
+
+
+</script>
+
+{% endblock javascripts %}

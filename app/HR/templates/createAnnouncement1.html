@@ -1,0 +1,217 @@
+{% extends 'layouts/hr_main.html' %}
+
+{% block title %} Dashboard For Bank Users {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+{% endblock stylesheets %}
+
+{% block content %}
+<style>
+.section{
+    background-image: url('../static/admin_images/UA_footballground.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    width: 100%;
+}
+a{
+    text-decoration: none;
+    color: #fff;
+}
+a:hover{
+    text-decoration: underline;
+}
+.wrapper1{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: rgba(0,0,0,0.3);
+}
+.announce_box{
+    position: relative;
+    width: 450px;
+    backdrop-filter: blur(15px);
+    border: 2px solid #fff;
+    border-radius: 15px;
+    padding: 7.5em 2.5em 4em 2.5em;
+    color: #fff;
+    box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.4);
+}
+.announce-header{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(238, 205, 164);
+    width: 140px;
+    height: 70px;
+    border-radius: 0 0 20px 20px;
+}
+.announce-header span{
+    text-align: center;
+    font-weight: 600;
+}
+.announce-header::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -30px;
+    width: 30px;
+    height: 30px;
+    border-top-right-radius: 50%;
+    background: transparent;
+    box-shadow: 15px 0 0 0 rgb(238, 205, 164);
+}
+.announce-header::after{
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -30px;
+    width: 30px;
+    height: 30px;
+    border-top-left-radius: 50%;
+    background: transparent;
+    box-shadow: -15px 0 0 0 rgb(238, 205, 164);
+}
+.input_box{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0;
+}
+.input-field{
+    width: 100%;
+    height: 55px;
+    font-size: 14px;
+    color: #fff;
+    background: transparent;
+    padding-inline: 20px 50px;
+    border: 2px solid rgb(238, 205, 164);
+    border-radius: 30px;
+    outline: none;
+}
+.input-field:focus {
+  /* Your styles for the focused state */
+  border-color: rgb(238, 205, 164); /* For example, change border color to blue when the input is focused */
+}
+
+#title{
+    margin-bottom: 10px;
+}
+.label{
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    transform: 20px;
+    transition: .2s;
+}
+.input-field:focus ~ .label,
+.input-field:valid ~ .label{
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-size: 14px;
+    background-color: rgb(238, 205, 164);
+    border-radius: 30px;
+    color: #fff;
+    padding: 0 10px;
+}
+.icon{
+    position: absolute;
+    top: 18px;
+    right: 25px;
+    font-size: 20px;
+}
+.menu-icon1{
+    position: absolute;
+    top: 18px;
+    right: 25px;
+    font-size: 20px;
+}
+.input-submit{
+    width: 100%;
+    height: 50px;
+    background: #ececec;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .3s;
+    text-align: center;
+}
+.input-submit:hover{
+    background: #939292;
+}
+@media only screen and (max-width: 564px){
+    .wrapper1{
+        padding: 20px;
+    }
+    .announce_box{
+        padding: 7.5em 1.5em 4em 2.5em;
+    }
+}
+</style>
+<div class="section">
+    <form id="announcementForm" action="create_announcement" method="POST">
+<div class="wrapper1">
+    <div class="announce_box">
+        <div class="announce-header">
+            <span>Create Announcement</span>
+        </div>
+        <div class="input_box">
+            <input type="text" id="title" class="input-field" name="title" required>
+            <label for="title" class="label">Title</label>
+            <i class="ti-announcement menu-icon1"></i>
+        </div>
+        <div class="input_box">
+            <input type="text" id="subject" class="input-field" name="subject" required>
+            <label for="subject" class="label">Subject</label>
+            <i class="ti-target menu-icon1"></i>
+        </div>
+        <div class="input_box">
+            <input type="text" id="content" class="input-field" name="content" required>
+            <label for="content" class="label">Content</label>
+            <i class="ti-comment menu-icon1"></i>
+        </div>
+        <div class="input_box">
+            <input type="text" id="link" class="input-field" name="link" required>
+            <label for="content" class="label">Link</label>
+            <i class="ti-link menu-icon1"></i>
+        </div>
+        <div class="input-box">
+            <input type="submit" class="input-submit" value="Submit">
+        </div>
+    </div>
+</div>
+</form>
+</div>
+<!-- Include SweetAlert2 from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // JavaScript to show an alert after form submission
+    document.getElementById('announcementForm').addEventListener('submit', function() {
+        // Add your custom alert message here
+        Swal.fire({
+            title: 'Success!',
+            text: 'Form submitted successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    });
+</script>
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+{% endblock javascripts %}

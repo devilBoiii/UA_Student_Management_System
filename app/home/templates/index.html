@@ -1,0 +1,429 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %} Student Management System {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+.announcement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../static/images/UA_Announcement.jpg");
+  background-size: cover;
+  min-height: 100vh;
+  font-family: Raleway, sans-serif;
+  line-height: 1.5;
+}
+
+.hero {
+  margin: 0.2rem 0 7rem;
+  padding: 3.3rem 4rem 4rem;
+  width: 60%;
+  border: 1px solid rgba(2, 33, 31, 0.6);
+  border-radius: 5px;
+  box-shadow: inset 0 0 1px 1px #ccebff, 10px 10px 60px 20px rgba(0, 35, 46, 0.5);
+  background: rgba(232, 229, 227, 0.9);
+}
+
+@supports ((-webkit-backdrop-filter: blur(25px) brightness(170%)) or (backdrop-filter: blur(25px) brightness(170%))) {
+  .hero {
+    background: rgba(232, 229, 227, 0.5);
+    -webkit-backdrop-filter: blur(25px) brightness(170%);
+            backdrop-filter: blur(25px) brightness(170%);
+  }
+}
+.hero__headline {
+  margin: 0;
+  font-size: 4.5rem;
+  line-height: 1.1;
+  color: #00384d;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero__headline {
+    color: transparent;
+    background-image: linear-gradient(45deg, #910c08, #11549c);
+    -webkit-background-clip: text;
+            background-clip: text;
+  }
+}
+.hero__text {
+  margin: 1.5rem 0;
+  color: #032b28;
+  max-width: 100%;
+  font-size: 1.5rem;
+}
+
+.hero__button {
+  margin: 2rem 0 0;
+  padding: 0.8rem 1.2rem;
+  display: block;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  background-color: #c32822;
+  color: white;
+  background-image: linear-gradient(45deg, #11549c, #ad231f);
+  transition: all 0.2s ease-in-out;
+}
+.hero__button:hover {
+  filter: brightness(120%);
+  color: #fff;
+  box-shadow: 2px 2px black;
+  font-weight: 500;
+  text-decoration: none;
+}
+#footer{
+	margin-top: -1px;
+}
+@media (max-width: 800px) {
+  html {
+    font-size: 0.8rem;
+  }
+
+  .hero__headline {
+    font-size: 2.5rem;
+  }
+}
+</style>
+<!-- Header -->
+<header id="head">
+	<div class="container">
+		<div class="row text">
+			<h1 class="lead">School Of WILL:</h1>
+			<p class="tagline">Winners, Innovators, Leaders & Learners</p>
+			<!--<p> <a href="{{url_for('home_blueprint.enroll_page')}}" class="btn btn-action btn-lg" role="button">ENROLL
+					NOW</a></p>-->
+		</div>
+	</div>
+</header>
+<!-- /Header -->
+
+<!-- Intro -->
+<section id="about">
+	<div class="container text-center">
+		<br> <br>
+		<h2 class="thin">VISION & MISSION</h2>
+		<p class="text-muted">
+			In the present milieu with erosion of values and lowering of standards in most institutions, UA stands out as a
+			school with strong value system and a code of conduct and discipline, which is based on mutual respect. We
+			uphold our founder’s vision and stress on total development – head, hand and heart. We are deeply committed in
+			instilling in our students, positive traits like self discipline and social harmony that will lead to Gross
+			National Happiness and Global Peace. Our school motto, “Be Your Best” makes every individual be his or her own
+			competitor. In the end we aspire for developing a good human being.
+		</p>
+	</div>
+</section>
+
+<!-- /Intro-->
+
+<!-- Highlights - jumbotron -->
+<div class="jumbotron top-space">
+	<div class="container">
+		<h2 class="text-center top-space">NATIONAL AWARDS</h2>
+		<hr>
+		 <div class="row cous">
+					<div class="col-sm-6">
+						<div class="slider-border">
+							<div id="myCarousel" class="carousel slide" class="slider-border" data-ride="carousel">
+								<!-- Indicators -->
+								<ol class="carousel-indicators">
+									<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+									<li data-target="#myCarousel" data-slide-to="1"></li>
+									<li data-target="#myCarousel" data-slide-to="2"></li>
+									<li data-target="#myCarousel" data-slide-to="3"></li>
+									<li data-target="#myCarousel" data-slide-to="4"></li>
+									<li data-target="#myCarousel" data-slide-to="5"></li>
+									<li data-target="#myCarousel" data-slide-to="6"></li>
+									<li data-target="#myCarousel" data-slide-to="7"></li>
+									<li data-target="#myCarousel" data-slide-to="8"></li>
+									<li data-target="#myCarousel" data-slide-to="9"></li>
+									<li data-target="#myCarousel" data-slide-to="10"></li>
+									<li data-target="#myCarousel" data-slide-to="11"></li>
+									<li data-target="#myCarousel" data-slide-to="12"></li>
+									<li data-target="#myCarousel" data-slide-to="13"></li>
+									<li data-target="#myCarousel" data-slide-to="14"></li>
+
+								</ol>
+
+								<!-- Wrapper for slides -->
+								<div class="carousel-inner">
+									<div class="item active">
+										<img src="../static/images/ua4.png" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten schools in overall performance for the year 2016 at the Higher Secondary
+												Levels (Class XII)</p>
+										</div>
+									</div>
+
+									<div class="item">
+										<img src="../static/images/ua45.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten schools in overall performance for the year 2016 at the Middle Secondary Level (Class X)
+											</p>
+										</div>
+									</div>
+
+									<div class="item">
+										<img src="../static/images/ua6.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2015 at the Middle Secondary
+												Level (Class X)
+
+											</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="../static/images/ua7.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2015 at the Higher Secondary
+												Level (Class XII)
+
+											</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="../static/images/ua8.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2014 at the Middle Secondary
+												Level (Class X)</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="../static/images/ua9.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2014 at the Higher Secondary
+												Level (Class XII)
+
+											</p>
+										</div>
+									</div>
+
+									<div class="item">
+										<img src="../static/images/ua10.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2013 at the Middle Secondary
+												Level (Class X)
+											</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="../static/images/ua11.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2013 at the Higher Secondary
+												Level (Class XII)</p>
+										</div>
+									</div>
+
+									<div class="item">
+										<img src="../static/images/ua12.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2012 at the Higher Secondary
+												Level (Class XII)</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="../static/images/ua13.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2012 at the Middle Secondary
+												Level (Class X)</p>
+										</div>
+									</div>
+
+									<div class="item">
+										<img src="../static/images/ua14.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2011 at the Middle Secondary
+												Level (Class X)
+
+											</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="../static/images/ua15.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2011 at the Higher Secondary
+												Level (Class XII)</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="../static/images/ua16.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2010 at the Middle Secondary
+												Level (Class X)
+
+											</p>
+										</div>
+									</div>
+
+									<div class="item">
+										<img src="../static/images/ua17.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption-info">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 2010 at the Higher Secondary
+												Level (Class XII)</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="../static/images/ua18.png" alt="New York" style="width:100%;height:400px;">
+										<div class="carousel-caption">
+											<h3>Academic Rewards</h3>
+											<p>Top ten school in overall performance for the year 209 at the Middle Secondary
+												Level (Class X)
+
+											</p>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+							<!-- Left and right controls -->
+
+						</div>
+
+					</div>
+					<div class="col-sm-6">
+						<div class="slider-border">
+							<div id="myCarousel" class="carousel slide" data-ride="carousel">
+								<!-- Indicators -->
+								<ol class="carousel-indicators">
+									<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+									<li data-target="#myCarousel" data-slide-to="1"></li>
+									<li data-target="#myCarousel" data-slide-to="2"></li>
+								</ol>
+
+								<!-- Wrapper for slides -->
+								<div class="carousel-inner">
+									<div class="item active">
+										<img src="../static/images/ua1.png" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Games and Sports</h3>
+											<p>Winner in Boys Football event during the National School Football and Traditional
+												Archery Tournament for HSS</p>
+										</div>
+									</div>
+
+									<div class="item">
+										<img src="../static/images/ua2.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Games and Sports</h3>
+											<p>Winner in Boys Volley ball event during the 14th National School Games</p>
+										</div>
+									</div>
+
+									<div class="item">
+										<img src="../static/images/ua3.png" alt="Chicago" style="width:100%; height:400px;">
+										<div class="carousel-caption">
+											<h3>Games and Sports</h3>
+											<p>Winner in Boys Basketball event during 14th National School Games</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+		 </div>
+
+
+				<div class="jumbotron top-space">
+					<h4><b>PRINCIPAL'S MESSAGE :</b></h4>
+					<h5>Dear Parents, Guardians, Teachers, and Students </h5>
+					<p>Re: UA’s staggered re-opening dates for 2022 Academic Session</p>
+					<p>On behalf of the UA Family, I extend our heartfelt gratitude for providing your relentless support
+						through this most unprecedented and challenging times. For us teachers, <br> we are as puzzled as
+						everyone is because, before we know an academic year has come to an end, the next is beginning.
+						Likewise, MoE has been changing the re-opening dates for schools in the country because of the
+						uncertainties and more importantly the vaccine roll out for children aged 5 to 11 – mass vaccination of
+						all the students.
+					<div class="collapse" id="collapseExample">
+						<div class="card card-body">
+							The most recent change has been notified <b>vide Notification No: DSE/SPCD/ADM (1.1-A)/2022/274
+								dated 26th March 2022.</b>
+							Accordingly, UA wishes to share the following attachments : <br>
+							<ul>
+								<li>Re-opening dates for Academic Session 2022</li>
+								<li>Essential School Requirements</li>
+								<li>Other Educational Programme(s)</li>
+							</ul>
+
+							Please bear with us for the slight delay in the re-opening dates for classes VII to X (Lower
+							Division); we had no choice but to plan it that way so that all our students below 11 years are also
+							fully vaccinated – mainly in class VII. Of course, we will be conducting Zoom Meetings to provide an
+							opportunity for students/parents/guardians to share and reflect on UA’s culture and climate and
+							beyond.
+							<br><br>
+							Additionally, it will be unbecoming on my part as a school leader not to commend our class X and XII
+							teachers who have had hardly any break in both 2020 and 2021 academic sessions. As seasoned
+							professionals, our teachers have sportingly endured the mental stress and physical hardships
+							associated with coming into “self-containment mode” of operation for close to two months. <br><br>
+							Even, amid the extraordinary challenges of the past two years, UA teachers have been innovative,
+							flexible, and brave. But in many cases, they've also been pushed to their limits — leading to fears
+							of them wanting to quit the profession. Undoubtedly, coping with uncertainty is always the greatest
+							challenge. Yet, they chose to cling on because they love the “teaching profession”.
+							<br><br>
+							Again, with the highest number of (appearing the BCSE - Class X and BHSEC - Class XII) students in
+							“self-containment mode” of operation in the country, UA Family members had the adaptability to move
+							forward successfully, especially in times of great change or transformation. Yes, we have been all
+							positive, proactive in adapting, adopting managing the complex and stress-filled situations.
+							My hats off to our supportive parents/guardians, resilient teachers, and disciplined students for
+							the commendable finish to academic session 2021. At the same time we all look forward to a happier
+							and safe 2022 academic session.
+							<br><br>
+							Warmest regards to all
+							<br><br>
+						</div>
+					</div>
+					<a class="btn btn-primary btn-action " data-bs-toggle="collapse" href="#collapseExample" role="button"
+						aria-expanded="false" aria-controls="collapseExample">
+						Read more »
+					</a>
+				</div>
+	</div>
+  </div>
+  <div class="announcement">
+	<section class="hero">
+		<h1 class="hero__headline">Announcement</h1>
+		
+		<p class="hero__text">
+			The <code>UA Fraternity</code> is pleased to announce the vacancy for the following positions! <br>
+			<ul>
+				<li><strong>Title: </strong>{{title}}</li>
+				<li><strong>Subject: </strong>{{subject}}</li>
+				<li><strong>Content: </strong>{{content}}</li>
+			</ul>
+			<p>Application Deadline: [2nd March 2024]</p>
+			<p>We look forward to welcoming new members to the UA Fraternity family!</p>
+		</p>
+	  
+		<a class="hero__button" href="{{ link | escape }}" target="_blank" style="text-decoration: none;">Apply Now</a>
+	  </section>
+  </div>
+  <script>
+	console.log("Link Value:", "{{link}}")
+  </script>
+{% endblock content %}
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+{% endblock javascripts %}

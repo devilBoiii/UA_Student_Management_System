@@ -1,0 +1,280 @@
+{% extends 'layouts/admin_mains.html' %}
+
+{% block title %} Dashboard For Bank Users {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+{% block content %}
+<!-- partial:../../partials/_navbar.html -->
+<!-- partial -->
+
+<!-- partial:../../partials/_settings-panel.html -->
+<!-- partial -->
+<!-- partial:../../partials/_sidebar.html -->
+<!-- partial -->
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
+
+  <style>
+    .modal-backdrop{
+        display: none;
+    }
+</style>
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-lg-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">User List</h4>
+                        <hr>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table align-items-center table-flush" id="customerList" style="width: 100%;">
+                                            <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col" class="sort" data-sort="name">SL</th>
+                                                <th scope="col" class="sort" data-sort="name">CID</th>
+                                                <th scope="col" class="sort" data-sort="name">Username</th>
+                                                <th scope="col" class="sort" data-sort="name">Full Name</th>
+                                                <th scope="col" class="sort" data-sort="name">Email</th>
+                                                <th scope="col" class="sort" data-sort="name">DOB</th>
+                                                <th scope="col" class="sort" data-sort="budget">roles</th>
+                                                <th scope="col">action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true" data-target="#exampleModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <form action="" id="updating_info">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <input type="hidden" id="u_id" name="u_id">
+                                        <label class="form-control-label" for="cid">CID</label>
+                                        <input type="text" name="cid" id="cid" class="form-control" autocomplete="off" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="full_name">Full Name</label>
+                                        <input type="text" name="full_name" id="full_name" class="form-control" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email">Email address</label>
+                                        <input type="email" name="email" id="email" class="form-control" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="dob">DOB</label>
+                                            <input type="date" name="dob" id="dob" class="form-control" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="username">Username</label>
+                                            <input type="text" name="username" id="username" class="form-control"
+                                                placeholder="Username" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="role">Role</label>
+                                            <select name="role" id="role" class="form-control">
+                                                <option value="class_teacher">Class Teacher</option>
+                                                <option value="admin">Administrator</option>
+                                                <option value="subject_teacher">Subject Teacher</option>
+                                                <option value="human_resource">Human Resource</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="update_editButton" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        loadUsers()
+    });
+    function loadUsers() {
+        $('#customerList').DataTable({
+            'processing': true,
+            'serverSide': true,
+            'bDestroy': true,
+            'serverMethod': 'POST',
+            'ajax': {
+                'url': '/users'
+            },
+            'columns': [
+                { data: 'sl' },
+                { data: 'cid' },
+                { data: 'username' },
+                { data: 'full_name' },
+                { data: 'email' },
+                { data: 'dob' },
+                { data: 'role' },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<div class="dropdown">' +
+                            '<a class="btn btn-primary btn-icon-only text-light" data-toggle="modal" data-target="#exampleModal" onclick="editUser(\'' + full.id + '\')" role="button" style="height: auto; display: inline-block;" >' +
+                            '<b> Edit </b >' +
+                            '</a>' +
+                            '   <a class="btn btn-danger btn-icon-only text-light" href="javascript:void(0)"  onclick="deleteUser(\'' + full.id + '\')" role="button">' +
+                            '<b>Delete</b>' +
+                            '</a>' +
+                            '</div>'
+
+                    }
+                },
+            ],
+            language: {
+                paginate: {
+                    next: '&#8594;', // or '→'
+                    previous: '&#8592;' // or '←' 
+                }
+            },
+            "ordering": false
+        });
+    }
+    // edit button
+    function editUser(id) {
+        $.get('/edit-user/' + id, function (res) {
+            const { data } = res
+            // if response is json load modal and show data in field
+            $("#exampleModal").modal('show');
+            $("#cid").val(data[0].cid);
+            $("#username").val(data[0].username);
+            $("#full_name").val(data[0].full_name);
+            $("#email").val(data[0].email);
+            $("#dob").val(data[0].dob);
+            $("#role").val(data[0].role);
+            $("#u_id").val(data[0].id);
+
+        })
+    }
+
+    // updating the edit button
+
+    $("#update_editButton").click(function () {
+        var form_data = new FormData($('#updating_info')[0])
+        $.ajax({
+            type: "POST",
+            url: "/updating_users",
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+
+            success: function (data) {
+                if (data === "errorFound") {
+                    swal('Error', 'Could Not Update ', 'error').then(function () {
+                        location.reload()
+                    })
+                } else {
+                    swal('Success', 'Successfully Updated', 'success').then(function () {
+                        location.reload()
+                    })
+                }
+
+            },
+            error: function () {
+                swal('Error', 'Could Not Add Student', 'error').then(function () {
+                    location.reload()
+                })
+            }
+        });
+    });
+
+
+    // for deleting
+    function deleteUser(id) {
+    swal({
+        title: "Are you sure?",
+        text: "You will not be able to recover this data!",
+        type: "warning",
+        showCancelButton: true,
+        showConfirmButton: true
+    }).then(function (isConfirm) {
+        if (isConfirm == true) {
+            $.ajax({
+                url: '/delete_list/' + id,
+                type: 'POST',
+                success: function (res) {
+                    console.log(res)
+                    if (res === "done") {
+                        swal({
+                            title: 'Success!',
+                            text: 'User delete successful!',
+                            type: 'success'
+                        }).then(function () {
+                            // Reload the page after the user clicks OK
+                            location.reload();
+                        });
+                    } else {
+                        swal({
+                            icon: 'success',
+                            text: 'User Successfully Deleted',
+                            type: 'success'
+                        }).then(function () {
+                            // Reload the page after the user clicks OK
+                            location.reload();
+                        });
+                    }
+                },
+                error: function () {
+                    swal("Error", "Error while deleting user. Refresh page and try again :)", "error");
+                }
+            })
+        } else {
+            swal("Cancelled", "Your data is safe :)", "error");
+        }
+    })
+}
+    // closing modal
+</script>
+{% endblock javascripts %}

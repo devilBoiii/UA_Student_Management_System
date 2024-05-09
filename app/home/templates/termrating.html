@@ -1,0 +1,212 @@
+{% extends 'layouts/enroll_main.html' %}
+
+{% block title %} Student Management System {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .my-custom-container {
+        margin-top: 80px; /* Adjust the value as needed */
+    }
+
+    h5 {
+        color: #007bff;
+    }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    table, thead, tr, th, td{
+        text-align: center;
+        border: 1px solid black;
+    }
+    th:nth-child(1){
+        width: 20px;
+    }
+    .profile{
+        border: 1px solid black;
+        width: 50%;
+    }
+h3{
+    font-size: 1.2rem;
+}  
+        @import url(https://fonts.googleapis.com/css?family=Raleway:400,200,300,800);
+        figure.snip0016 {
+        font-family: 'Raleway', Arial, sans-serif;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        min-width: 220px;
+        max-width: 310px;
+        max-height: 220px;
+        width: 100%;
+        background: #000000;
+        text-align: left;
+        }
+        figure.snip0016 * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        }
+        figure.snip0016 img {
+        max-width: 100%;
+        opacity: 1;
+        width: 100%;
+        -webkit-transition: opacity 0.35s;
+        transition: opacity 0.35s;
+        }
+        figure.snip0016 figcaption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding: 30px 3em;
+        width: 100%;
+        height: 100%;
+        }
+        figure.snip0016 figcaption::before {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        bottom: 30px;
+        left: 100%;
+        content: '';
+        opacity: 0;
+        -webkit-transition: all 0.5s;
+        transition: all 0.5s;
+        -webkit-transition-delay: 0.6s;
+        transition-delay: 0.6s;
+        }
+        figure.snip0016 p {
+        margin: 0 0 5px;
+        opacity: 0;
+        -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+        transition: opacity 0.35s,-webkit-transform 0.35s,-moz-transform 0.35s,-o-transform 0.35s,transform 0.35s;
+        }
+        figure.snip0016 p {
+        font-weight: 200;
+        -webkit-transform: translate3d(0%, 30%, 0);
+        transform: translate3d(0%, 30%, 0);
+        -webkit-transition-delay: 0s;
+        transition-delay: 0s;
+        }
+        figure.snip0016:hover img {
+        opacity: 0.3;
+        }
+        figure.snip0016:hover figcaption p:nth-child(1) {
+        opacity: 1;
+        -webkit-transform: translate3d(0%, 0%, 0);
+        transform: translate3d(0%, 0%, 0);
+        -webkit-transition-delay: 0.4s;
+        transition-delay: 0.4s;
+        }
+        figure.snip0016:hover figcaption p {
+        opacity: 0.9;
+        -webkit-transform: translate3d(0%, 0%, 0);
+        transform: translate3d(0%, 0%, 0);
+        -webkit-transition-delay: 0.6s;
+        transition-delay: 0.6s;
+        }
+        figure.snip0016:hover figcaption::before {
+        background: rgba(255, 255, 255, 0);
+        left: 30px;
+        opacity: 1;
+        -webkit-transition-delay: 0s;
+        transition-delay: 0s;
+    }
+    #back_hand{
+        transition: .4s all ease-in-out;
+    }
+    #back_hand:hover{
+        transform: scale(1.7);
+    }
+</style>
+<body>
+    <br><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/" style="font-size: 1.2em; text-decoration: none;color: #000000;font-weight: 600;"><i class="fa fa-hand-o-left" id="back_hand"></i>&nbsp;&nbsp;Back Home</a><br><br>
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                    <th>Key</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Value</td>
+                    <td>Begining</td>
+                    <td>Approaching</td>
+                    <td>Meeting</td>
+                    <td>Advancing</td>
+                    <td>Exceeding</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br><br><br><br><br>
+    <div id="termrating" class="container tab-pane" style="
+        width: 100%;">
+    <form id="termrate" class="bg-white p-4 rounded">
+        <center>
+            <figure class="snip0016">
+                <img src="{{ std.half_photo }}" alt="sample41"/>
+                <figcaption>
+                    <p style="font-size: 1.1em; text-transform: uppercase;"><strong style="font-size: 1.2em;">Name:</strong> {{student_details.first_name +' '+student_details.last_name}}</p>
+                    <p><strong style="font-size: 1.2em;">Student Code:</strong> {{student_details.student_code}}</p>
+                    <p><strong style="font-size: 1.2em;">Gender :</strong> {{student_details.gender}}</p>
+                    <p><strong style="font-size: 1.2em;">Class:</strong> {{student_details.class_name}}</p>
+                    <p><strong style="font-size: 1.2em;">Section:</strong> {{student_details.section}}</p>
+                </figcaption>     
+            </figure>
+        </center>
+          
+        {% for term in result_set %}
+        <br><br>
+        <h2 style="font-size: 2rem; text-align: center; border: 1px solid black; padding: 10px 0px; margin: -1px 0px;background-color: rgba(213, 217, 219, 0.817); font-weight:600">{{ term['subject_name'] }}</h2>
+    <table class="table">   
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Block 1 (Before Midterm)</th>
+            <th>Block 2 (After Midterm)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>1</th>
+            <td>{{ term.block1 }}</td>
+            <td>{{ term.block2 }}</td>
+          </tr>
+          <tr>
+            <th>2</th>
+            <td>{{ term.block3 }}</td>
+            <td>{{ term.block4 }}</td>
+          </tr>
+        </tbody>
+      </table>
+      {% endfor %}
+    </form>
+    </div>
+</body>
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstraps.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+<script>
+
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,37 @@
+	<!-- Fixed navbar -->
+	<style>
+		@media only screen and (max-width: 767px) {
+    /* Styles for mobile devices */
+	#navbar{
+		width: 413px;
+	}
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    /* Styles for tablets */
+	#navbar{
+		width: 430px;
+	}
+}
+
+	</style>
+	<div class="navbar navbar-inverse navbar-fixed-top" id="navbar" >
+		<div class="container">
+			<div class="navbar-header">
+				<!-- Button for smallest screens -->
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mynavbar"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+				<a class="navbar-brand" href="{{url_for('home_blueprint.route_default')}}"><img src="../static/images/logo.png" alt="Logo"></a>
+			</div>
+			<div class="navbar-collapse collapse" id="mynavbar">
+				<ul class="nav navbar-nav pull-right">
+					<li class=" active"><a href="#">Home</a></li>
+					<li><a class="scrollto" href="#about">About Us</a></li>
+					<li><a href="{{url_for('home_blueprint.studentFee')}}">Student Fees</a></li>
+					<li><a href="{{url_for('home_blueprint.trackapplication')}}">Track Student</a></li>
+					<li><a href="{{url_for('home_blueprint.contact')}}">Contact Us</a></li>
+					<li><a class="btn" href="{{url_for('home_blueprint.enroll_page')}}">Enroll Now</a></li>
+					<li><a class="btn" href="{{url_for('home_blueprint.login')}}">Login</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div> 
+	<!-- /.navbar -->

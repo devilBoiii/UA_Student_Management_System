@@ -1,0 +1,394 @@
+{% extends 'layouts/signin.html' %}
+
+{% block title %} Login {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> 
+	<style>
+		.faded-text {
+		  opacity: 0.5; /* Set the opacity value as per your preference */
+		}
+		#modalPage {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1050; /* Adjust the z-index value as needed */
+      background-color: rgba(0, 0, 0, 0.5); /* Adjust the background color and opacity as needed */
+    }
+    .modal-backdrop {
+      display: none !important;
+    }
+    
+	  </style>
+	  
+	{% endblock stylesheets %}
+
+{% block content %}
+<style>
+body {
+  background: #2e3441;
+  background-image: -webkit-radial-gradient(top, circle cover, #4e7a89, #2e3441 80%);
+  background-image: -moz-radial-gradient(top, circle cover, #4e7a89, #2e3441 80%);
+  background-image: -o-radial-gradient(top, circle cover, #4e7a89, #2e3441 80%);
+  background-image: radial-gradient(top, circle cover, #4e7a89, #2e3441 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+</style>
+<body>
+<!-- container -->
+<div class="container" id="loginPage" style="display: none;">
+
+	<ol class="breadcrumb">
+		<li><a href="{{url_for('home_blueprint.route_default')}}"><i class="fa fa-home">Home</i></a></li>
+		<li class="active"> User Login </li>
+	</ol>
+	<hr style="position: relative; top: 3px; border: none; height: 2px; background: black;">				
+	<!-- new login -->
+		<div class="container">
+			<div class="row">
+				<div class="col-md-offset-4 col-md-4 col-sm-offset-3 col-sm-6" style="height: 432px;">
+					<div class="form-container" style="background: transparent;">
+						<h3 class="title" style="color:black;">User Login</h3>
+              <form class="form-horizontal" role="form" method="post" action="" id="login-form">
+                <div class="form-icon">
+                  <i class="fa fa-user-circle"></i>
+                </div>
+                <div id="invalid" style="display: none;">
+                  <div class="alert">
+                    <div class="alert-danger" id="message">
+  
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  {{ form.hidden_tag() }}
+                    <div class="row">
+                      <div class="col-md-12">
+                        {{ form.username(placeholder="Username", class="form-control form-control",id="username-input") }}
+                      </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="input-group">
+                      {{form.password(placeholder="Password", class="form-control form-control-sm",id="password-input")}}
+                      <div class="input-group-append">
+                        <span class="input-group-text" style="cursor: pointer;" onclick="togglePasswordVisibility()">
+                          <i class="fa fa-eye" id="password-toggle"></i>
+                        </span>
+                        </div>
+                    </div>
+                    </div>
+                  </div>	 <br>
+                    <!-- <button type="button" class="btn btn-primary" id="forgotPasswordBtn" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+                      Forgot Password?
+                    </button> -->
+                    <span class="forgot" style="text-align: center;">
+                      <a href="#!" id="forgotPasswordLink" >Forgot Password?</a>
+                      <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>									 -->
+                      </span>								      
+                </div>
+                <button class="btn signin" name="login">Login</button>
+              </form>
+					</div>
+				</div>
+			</div>
+		</div>
+</div> 
+
+
+
+
+<div class="container" id="modalPage" style="display: none;">
+    <ol class="breadcrumb">
+        <li><a href="{{url_for('home_blueprint.route_default')}}"><i class="fa fa-home"> Home</i></a></li>
+        <li class="active"> Forgot Password</li>
+    </ol>
+    <hr style="position: relative; top: 3px; border: none; height: 2px; background: black;">
+    <!-- new login -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-offset-4 col-md-4 col-sm-offset-3 col-sm-6">
+                <div class="form-container border rounded p-4" style="background: transparent;">
+                    <h3 class="title" style="color:black;">Forgot Password?</h3>
+                    <form class="form-horizontal" role="form" id="forgotPasswordForm">
+                       
+                      <div class="form-group">
+                            <input type="text" name="username" id="username" class="form-control form-control-lg faded-text" placeholder="Enter your Username or Email" autocomplete="off">
+                            <span id="usernameError" class="text-danger"></span>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary" id="searchButton" onclick="submitForgotPasswordForm()" >Search</button>
+                            <button type="button" class="btn btn-secondary" id="cancelButton" onclick="cancelButtonFunc()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% include 'flash_messages.html' %}
+
+
+<div class="modal" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="sendModalLabel" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <form id="sendModalForm">
+                <div class="modal-header">
+                    <h5 class="modal-title mr-auto" id="sendModalLabel">Reset your password
+                        <button type="button" class="close" data-dismiss="modal" style="font-size: 30px; font-weight: bold;">&times;</button>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-control-label" for="emailId">Send Password Reset Link to</label>
+						<input id="emailId" class="form-control" readonly>
+            <input id="userNames" class="form-control" readonly style="display: none;">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-sm-6 text-left">
+                            <button type="button" class="btn btn-secondary btn-block justify-content: center;">Cancel</button>
+                        </div>
+                        <div class="col-sm-6 text-right">
+<button type="submit" class="btn btn-primary btn-block justify-content: center;" onclick="submitSendMail()" id="sendMailButton">Send Mail</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+  
+</body>
+
+<!-- /social links -->
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+	crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+$(document).ready(function() {
+ 
+  $('#loginPage').show();
+  $('#sendModal').hide();
+  $('#modalPage').hide();
+  $('#forgotPasswordLink').on('click', function(event) {
+        event.preventDefault();
+		$('#modalPage').show();
+		$('#loginPage').hide();
+    $('#sendModal').hide();
+      });
+	
+	  $('#sendModal').on('click', '.close', function() {
+    $('#sendModal').hide();
+    $('#modalPage').show();
+    $('#loginPage').hide();
+  });
+
+  $('#sendModalForm').on('keyup', function(event) {
+    submitSendMail(event);
+  });
+
+  // Show the modalPage container after the sendModal is shown
+});
+function cancelButtonFunc() {
+    event.preventDefault();
+    $('#modalPage').hide();
+		$('#loginPage').show();
+    $('#sendModal').hide();
+    window.location.hash = "";
+
+}
+
+function submitSendMail(event) {
+ event.preventDefault();  // Prevent the default form submission behavior
+
+  var emailId = $('#emailId').val();
+  var userNames = $('#userNames').val();
+  var data = {
+    emailId: emailId,
+    userNames: userNames
+  };
+  $.ajax({
+    url: '/resetPassword/' + emailId + '/' + userNames,
+    method: 'POST',
+    data: data,
+	beforeSend: function () {
+            $("#sendMailButton").text("Loading....")
+            $("#sendMailButton").attr("disabled", true)
+            $("#sendMailButton").addClass("disabled")
+
+        },
+    success: function(response) {
+  console.log("Response:*******res", response);
+  if (response!='Error') {   
+	swal("Email Sent", "The email has been successfully sent.", "success")
+                    .then(function () {
+                        window.location = "";
+                    });
+  } else {
+    swal("Error", "An error occurred while sending the email.", "error")
+	.then(function () {
+                        window.location = "";
+                    });
+  }
+},
+
+    error: function(xhr, status, error) {
+      // Handle errors
+      console.error(error);
+
+      swal("Error", "An error occurred while sending the email.", "error");
+    }
+  });
+}
+
+$('#sendModalForm').submit(submitSendMail);
+
+
+function submitForgotPasswordForm(event) {
+  event.preventDefault(); // Prevent form submission
+
+  var username = document.getElementById("username").value;
+
+  // Perform your desired actions with the form data
+  console.log("Username:", username);
+
+  // Clear previous error messages
+  $("#usernameError").text("");
+  var isValid = true;
+
+  if (username.trim() === "") {
+    $("#usernameError").text("Username or Email is required.");
+    isValid = false;
+  }
+
+  if (isValid) {
+    // Create an object to hold the data
+    var data = {
+      username: username
+    };
+
+    // Send the Ajax request
+    var responseData = null;
+    $.ajax({
+      url: '/forgotPassword/' + username,
+      method: 'POST',
+      data: data,
+      success: function(response) {
+        console.log("Response:*******", response);
+        if (response.hasOwnProperty("error")) {
+          swal('Error', response.error, 'error')
+            .then(function() {
+              // After swal is dismissed, focus on the input field for continuous validation
+              setTimeout(function() {
+                document.getElementById("username").focus();
+              }, 0);
+            });
+        } else {
+          // Update the emailId field in the modal with the retrieved email data
+          $("#emailId").val(response.emailId);
+          $('#userNames').val(response.userName);
+
+          setTimeout(function() {
+            document.getElementById("username").focus();
+          }, 0);
+
+          // Show the modal
+          $('#sendModal').show();
+        }
+      },
+      error: function(xhr, status, error) {
+        // Handle errors
+        console.error(error);
+      }
+    });
+  }
+}
+
+// Attach the submitForgotPasswordForm function to the form submission event
+$('#forgotPasswordForm').submit(submitForgotPasswordForm);
+
+// Attach the keydown event listener to the document
+$(document).on("keydown", function(event) {
+    if (event.key === "Enter" && $("#username").is(":focus")) {
+      submitForgotPasswordForm(event);
+    }
+  });
+
+  // Attach the keydown event listener to the username input field
+  $("#username").on("keydown", function(event) {
+    // Clear previous error messages
+    $("#usernameError").text("");
+
+    var username = $(this).val();
+
+    if (event.key === "\\" || event.keyCode === 220) {
+      // Perform validation or actions specific to the backslash key ("\")
+      $("#usernameError").text("Backslash is not allowed.");
+      event.preventDefault(); // Prevent the backslash character from being entered
+    }
+  });
+
+
+function togglePasswordVisibility() {
+		var passwordInput = document.getElementById("password-input");
+		var passwordToggle = document.getElementById("password-toggle");
+		if (passwordInput.type === "password") {
+			passwordInput.type = "text";
+			passwordToggle.classList.remove("fa-eye");
+			passwordToggle.classList.add("fa-eye-slash");
+		} else {
+			passwordInput.type = "password";
+			passwordToggle.classList.remove("fa-eye-slash");
+			passwordToggle.classList.add("fa-eye");
+			
+		}
+	}
+
+	$("#login-form").on("submit", function (e) {
+		e.preventDefault(e);
+		$('#loginPage').show();
+		$('#modalPage').hide();
+		var form_data = new FormData($('#login-form')[0])
+		$.ajax({
+			type: 'POST',
+			url: "/login",
+			data: form_data,
+			contentType: false,
+			cache: false,
+			processData: false,
+			success: function (res) {
+				if (res.output.fa_required == "invalid") {
+					$("#invalid").show();
+					$("#message").html(res.output.message);
+
+				} else {
+					window.location = "/dashboard";
+				}
+			}
+		});
+	});
+
+</script>
+{% endblock javascripts %}

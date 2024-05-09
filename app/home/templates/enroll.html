@@ -1,0 +1,36 @@
+{% extends 'layouts/enroll_main.html' %}
+
+{% block title %} Student Management System {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container">
+
+	<ol class="breadcrumb ">
+		<li><a href="{{url_for('home_blueprint.route_default')}}"><i class="fa fa-home" style="font-size: 15px;">
+					Home</i></a></li>
+		<li class="active" style="font-size: 13px;">Student Registration</li>
+	</ol>
+	<hr style="position: relative; top: 3px; border: none; height: 2px; background: black;">				
+	<h4 class="well">
+		<img src="../static/admin_images/faces/uahead.png">
+		<hr>
+		<b>Admission Closed</b>
+		<br>
+		<br>
+	</h4>
+    <!-- enddddd -->
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+<!--<script src="static/js/student_enroll_validation.js" type="text/javascript"></script>-->
+<!--<script src="{{ url_for('static', filename='js/student_enroll_validation.js') }}"></script>-->
+
+
+{% endblock javascripts %}

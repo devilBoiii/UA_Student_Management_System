@@ -1,0 +1,339 @@
+<body>
+    {% extends 'layouts/result_template.html' %}
+
+    {% block title %} Student Management System {% endblock title %}
+    <!-- Specific CSS goes HERE -->
+    {% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <style>
+        .table th,
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #indiMarksTable {
+            margin-bottom: 20px;
+            /* Adjust the value as needed */
+        }
+
+        #resultmarksList {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        #resultmarksList th,
+        #resultmarksList td {
+            border: 1px solid black;
+            padding: 8px;
+            vertical-align: middle;
+        }
+
+        #stdmarks {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        #stdmarks th,
+        #stdmarks td {
+            border: 1px solid black;
+            padding: 8px;
+            vertical-align: middle;
+        }
+
+        .col-subject {
+            width: 2%;
+        }
+
+        .col-term1 {
+            width: 6%;
+        }
+
+        .col-term2 {
+            width: 6%;
+        }
+
+        .col-grandTotal {
+            width: 2%;
+        }
+
+        .col-ca1,
+        .col-ca2,
+        .col-midterm,
+        .col-annual,
+        .col-total2,
+        .col-total1 {
+            width: 2%;
+        }
+        
+    .attend{
+        width: 25px;
+        background-color: rgba(136, 133, 133, 0.2);
+        border: 1px solid rgb(195, 194, 194);
+        border-radius: 5px;
+    }
+    .logo{
+        width: 640px;
+        height: 100px;
+        float: right;
+        margin: -100px 800px;
+    }
+    .logo img{
+        width: 100%;
+        height: 100%;
+    }
+    /* Default styles */
+    .form-group label {
+        display: block; /* Labels as block elements */
+    }
+
+    /* @media query for smaller screens */
+    @media (max-width: 768px) {
+        /* Reduce column width for small screens */
+        #std_remarks .col-md-6 {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 10px; /* Gap between columns */
+        }
+
+        /* Reset width for labels and inputs */
+        #std_remarks .col-md-6 label,
+        #std_remarks .col-md-6 input,
+        #std_remarks .col-md-6 textarea {
+            width: auto; /* Auto width to fit grid */
+        }
+    }
+    </style>
+    {% endblock stylesheets %}
+    {% block content %}
+            <div class="justify-content-center">
+                 <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="pos-rel">
+                                        <form action="" class="generateHtmlToPdf"> 
+                                            <div id="downloadpdf">
+                                            <div id="division">
+                                                <div class="table-wrapper">
+                                                    <div class="table-title">
+                                                        <div class="row">
+                                                            <div class="col-sm-12 col-md-6 col-lg-12" style="text-align: center;">
+                                                                <br>
+                                                                <h6 class="text-center">STUDENT MARKS</h6>
+                                                                <p><b>Student Name :</b> <span style="text-transform: capitalize;">{{std.first_name}} {{std.last_name}}</span></p>
+                                                                <p><b>Index Number :</b> {{std.student_code}}</p>
+                                                            </div>
+                                                            <div class="logo">
+                                                                <!-- Add your image tag here -->
+                                                                <img src="../../static/images/logo.png" alt="UA logo" style=" width:15%; align-items: end; margin-left: -50px;" >
+                                                            </div>
+                                            
+                                                        </div>
+                                                    </div>
+                                                        <table id="stdmarks">
+                                                            <thead class="thead-light">
+                                                                <tr>
+                                                                    <th colspan="8">SUBJECT WISE ACADEMIC TRANSCRIPT
+                                                                    </th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th rowspan="2" colspan="1" class="col-subject">
+                                                                        Subject</th>
+                                                                    <th colspan="3" class="col-term1">TERM I</th>
+                                                                    <th colspan="3" class="col-term2">TERM II</th>
+                                                                    <th rowspan="2" colspan="1" class="col-grandTotal" style="width: 4%;">
+                                                                        GRAND TOTAL<br>(Total I + Total II)</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th rowspan='1' colspan="1" class="col-ca1" style="width: 4%;">CA
+                                                                    </th>
+                                                                    <th rowspan='1' colspan="1" class="col-midterm">
+                                                                        Mid
+                                                                        Term <br>Examination</th>
+                                                                    <th rowspan='1' colspan="1" class="col-total1">
+                                                                        Total
+                                                                        I</th>
+                                                                    <th rowspan='1' colspan="1" class="col-ca2" style="width: 4%;">CA
+                                                                    </th>
+                                                                    <th rowspan='1' colspan="1" class="col-annual">
+                                                                        Annual <br>Examination</th>
+                                                                    <th rowspan='1' colspan="1" class="col-total2">
+                                                                        Total
+                                                                        II</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for mark in std_marks %}
+                                                                <tr>
+                                                                    <td style="width: 2%;">{{ mark.subject_name}}</td>
+                                                                    <td style="width: 2%;">{{ mark.ca1 }}<span class="attend"> /15</span></td>
+                                                                    <td style="width: 2%;">{{ mark.mid_term }}<span class="attend"> /35</span></td>
+                                                                    <td style="width: 2%;">{{ mark.mid_term + mark.ca1 }}<span class="attend"> /50</span></td>
+                                                                    <td style="width: 2%;">{{ mark.ca2 }}<span class="attend"> /15</span></td>
+                                                                    <td style="width: 2%;">{{ mark.annual_exam }}<span class="attend"> /35</span></td>
+                                                                    <td style="width: 2%;">{{ "%0.2f"|format(mark.annual_exam + mark.ca2) }}<span class="attend"> /50</span></td>
+                                                                    <td style="width: 2%;">{{ "%0.2f"|format(mark.annual_exam + mark.ca2 + mark.mid_term + mark.ca1) }}<span class="attend"> /100</span></td> 
+                                                                </tr>
+                                                                {% endfor %}
+                                                                
+                                                                <tr>
+                                                                    <td rowspan="4"></td>
+                                                                    <td colspan="2"><b>Percentage</b></td>
+                                                                    <td><b>{{ std_academic.percentage }}</b></td>
+                                                                    <td colspan="2"><b>Percentage</b></td>
+                                                                    <td><b>{{ std_academic.percentage2}}</b></td>
+                                                                    <td>
+                                                                        <b>{{std_academic.total_percentage}}</b>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2"><b>Position</b></td>
+                                                                    <td><b>{{ std_academic.mid_term_position }}</b></td>
+                                                                    <td colspan="2"><b>Position</b></td>
+                                                                    <td><b>{{ std_academic.annual_position}}</b></td>
+                                                                    <td><b>{{ std_academic.final_position}}</b></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2"><b>Attendance</b></td>
+                                                                    <td><b>{{ std_academic.attendance }}<span class="attend"> /110</span></b></td>
+                                                                    <td colspan="2"><b>Attendance</b></td>
+                                                                    <td><b>{{ std_academic.attendance2}}<span class="attend"> /110</span></b></td>
+                                                                    <td><b>{{ std_academic.total_attendance}}<span class="attend"> /110</span></b></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2"><b>Total no. of Students</b></td>
+                                                                    <td><b>{{ std_academic.total_no_stds }}</b></td>
+                                                                    <td colspan="2"><b>Total no. of Students</b></td>
+                                                                    <td><b>{{ std_academic.total_no_stds2}}</b></td>
+                                                                    <td><b>{{ std_academic.total_no_stds2}}</b></td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr class="additional-header"><th colspan="4" style="text-align: left;">Signature of Parent/Guardian : </th><th colspan="4" style="text-align: left;">Signature of Parent/Guardian :</th>
+                                                                <tr class="additional-header"><th colspan="4" style="text-align: left;">Signature of Class Teacher : </th><th colspan="4" style="text-align: left;">Signature of Class Teacher : </th>
+                                                                <tr>
+                                                                    <td colspan="8"
+                                                                        style="text-align: center; font-weight: bold; ">
+                                                                        The detailed criteria for the continuous
+                                                                        assessment (CA) and the examinations for
+                                                                        each
+                                                                        subject should be based on the guidelines
+                                                                        provided in the syllabus/guidebook for each
+                                                                        subject.</td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+
+                                                    <br>
+                                                    <!-- Student Remarks -->
+                                                    <center>
+                                                    <div class="row" id="std_remarks">
+                                                        <h4 class="card-title">Student Remarks</h4>
+                                                        <table class="table">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><label for="std_status"
+                                                                        class="control-label col-sm-4 text-right" >Status</label>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" name="std_status"
+                                                                        id="view_std_status" class="form-control"
+                                                                        value="{{ std_academic.std_status }}" readonly>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <label class="control-label col-sm-4 text-right"
+                                                                        for="punctuality">Punctuality</label>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" name="punctuality"
+                                                                        id="view_punctuality" class="form-control"
+                                                                        value="{{ punctuality_label}}" readonly>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <label class="control-label col-sm-4 text-right"
+                                                                    for="discipline">Discipline</label>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" name="discipline"
+                                                                        id="view_discipline" class="form-control"
+                                                                        value="{{ discipline_label}}" readonly>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <label class="control-label col-sm-4 text-right"
+                                                                        for="leadership">Leadership Quality</label>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" name="leadership"
+                                                                        id="view_leadership" class="form-control"
+                                                                        value="{{ leadership_label}}" readonly>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <label for="supw_grade"
+                                                                        class="control-label col-sm-4 text-right">Supw
+                                                                        Grade</label>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" name="supw_grade"
+                                                                        id="view_supw_grade" class="form-control"
+                                                                        value="{{ std_academic.supw_grade }}" readonly>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <label for="remarks"
+                                                                        class="control-label col-sm-4 text-right">Remarks:</label>
+                                                                    </td>
+                                                                    <td>
+                                                                        <textarea name="remarks" id="remarks"
+                                                                        class="form-control" value="{{ std_academic.remarks }}" readonly>{{ std_academic.remarks }}</textarea>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    </center>
+                 
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+    
+{% endblock javascripts %}
+
+</body>

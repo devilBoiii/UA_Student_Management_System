@@ -1,0 +1,168 @@
+{% extends 'layouts/enroll_main.html' %}
+
+{% block title %} Student Management System {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container">
+<ol class="breadcrumb ">
+    <li><a href="{{url_for('home_blueprint.route_default')}}"><i class="fa fa-home" style="font-size:15px;">Home</i></a>
+    </li>
+    <li class="active" style="font-size: 13px;">Track Your Student</li>
+</ol>
+<hr style="position: relative; top: 3px; border: none; height: 2px; background: black;">				
+<br>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header" style="font-size:16px">Track your student performances :</div>
+                <div class="card-body">
+                    <center><strong>**Enter The CID or a Student Code**</strong></center>
+                    <form id="track_std" action='' method="POST">
+                        <div class="form-group row">
+                            <label for="std_cid" class="col-md-4 col-form-label text-md-right"
+                                style=" font-size:14px">CID</label>
+                            <div class="col-md-6"> <br>
+                                <input type="text" id="std_cid" class="form-control" name="std_cid" style="font-size:14px" onkeydown="return">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="std_code" class="col-md-4 col-form-label text-md-right"
+                                style=" font-size:14px">Student Code :</label>
+                            <div class="col-md-6"> <br>
+                                <input type="text" id="std_code" class="form-control" name="std_code" style="font-size:14px" onkeydown="return">
+                            </div>
+                        </div>
+                        <div class="col-md-6 offset-md-5">
+                            <button type="submit" id="track_stds" class="btn btn-success" style="font-size:15px">
+                                Search <i class="fa fa-search" aria-hidden="true"></i>
+                            </button> <br>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br><br>
+<!-- to show student details  -->
+<div class="container">
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Student </h4>
+                            <hr>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="table-responsive">
+                                        <table class="table align-items-center table-flush" id="customerList">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col" class="sort" data-sort="name">First name</th>
+                                                    <th scope="col" class="sort" data-sort="name">Last name</th>
+                                                    <th scope="col" class="sort" data-sort="name">Student Code</th>
+                                                    <th scope="col" class="sort" data-sort="budget">CID</th>
+                                                    <th scope="col" class="sort" data-sort="name">Email</th>
+                                                    <th scope="col">Term Rating</th>
+                                                    <th scope="col">Result</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="list" id="list">
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $("#track_std").on("submit", function (e) {
+            e.preventDefault(e);
+    
+            // Fetching values from input fields
+            var cid = $("#std_cid").val();
+            var studentCode = $("#std_code").val();
+    
+            // Checking if either field is empty
+            if (!cid && !studentCode) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Please Enter Both Of The CID & Code',
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                });
+                return;
+            }
+    
+            var form_data = new FormData($('#track_std')[0])
+    
+            $.ajax({
+                type: 'POST',
+                url: "/search",
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (res) {
+                    if (res.hasOwnProperty("error")) {
+                        swal('Error', res.error, 'error');
+                    } else {
+                        const { aaData } = res;
+    
+                        $("#list").empty();
+    
+                        // Append a table row with data from the response
+                        $("#list").append('<tr><td>' + aaData[0].first_name + '</td><td>' + aaData[0].last_name + '</td><td>' + aaData[0].student_code + '</td><td>' + aaData[0].student_cid + '</td><td>' + aaData[0].student_email + '</td><td>' +
+                            '<button class="btn btn-sm btn-info view-term-rating">Term Rating</button>' +
+                            '</td><td>' +
+                            '<a class="btn btn-sm btn-icon-only text-light view-result" id="view_result" role="button" data-toggle="dropdown" aria-haspopup="true" href="#" aria-expanded="false" style="background:orange">' + '<b>View</b>' + '</a>' +
+                            '</td></tr>');
+    
+                        $(".view-result").click(function () {
+                            // Retrieve the student ID from the data attribute
+                            var studentId = aaData[0].id;
+    
+                            // Redirect to the Flask route with the student ID
+                            window.location.href = '/view-std-details/' + studentId;
+                        });
+    
+                        $(".view-term-rating").click(function () {
+                            var studentId = aaData[0].id;
+    
+                            window.location.href = '/view-term-rating/' + studentId;
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+    
+
+{% endblock javascripts %}

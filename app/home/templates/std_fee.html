@@ -1,0 +1,860 @@
+{% extends 'layouts/std_Fee.html' %}
+
+{% block title %} Student Management System {% endblock title %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+  .centered-label {
+    display: block;
+    text-align: center;
+    margin: 0 auto; /* Optional: to center horizontally */
+}
+table,tr,td,th{
+  border: 1px solid rgb(169, 166, 166);
+}
+table tr label{
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #514e4e;
+  width: 100%;
+}
+.row input, select option{
+  font-size: 1.5em;
+  font-weight: 500;
+  text-align: center;
+}
+#fees_structure tr td, #fees_structure th{
+  font-size: 1.1em;
+  text-align: center;
+}
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+}
+
+.nav-item {
+    width: 290px;
+    height: 50px;
+}
+
+.nav-link {
+    cursor: pointer;
+    font-size: 1.9em;
+    transition: .5s ease-in-out;
+}
+.nav-link:hover{
+    text-decoration: none;
+}
+.nav-item:hover{
+    background-color: rgb(182, 185, 187);
+}
+#bank_type, #paymentModes {
+    font-size: 1.3em;
+}
+#bank_type option, #paymentModes option{
+    font-size: 1em;
+}
+#accountTable_filter, #accountTable_length, .pagination{
+  display: none;
+}
+#accountTable tr th{
+  padding: 2em;
+  font-size: 1em;
+  font-weight: 500;
+}
+#accountTable tr td{
+  font-size: 1em;
+}
+
+table.dataTable > thead .sorting:before, table.dataTable > thead .sorting_asc:before, table.dataTable > thead .sorting_desc:before, table.dataTable > thead .sorting_asc_disabled:before, table.dataTable > thead .sorting_desc_disabled:before {
+    display: none;
+}
+table.dataTable > thead .sorting:before, table.dataTable > thead .sorting:after, table.dataTable > thead .sorting_asc:before, table.dataTable > thead .sorting_asc:after, table.dataTable > thead .sorting_desc:before, table.dataTable > thead .sorting_desc:after, table.dataTable > thead .sorting_asc_disabled:before, table.dataTable > thead .sorting_asc_disabled:after, table.dataTable > thead .sorting_desc_disabled:before, table.dataTable > thead .sorting_desc_disabled:after {
+   display: none;
+}
+</style>
+<div class="container">
+    <ol class="breadcrumb ">
+        <li><a href="{{url_for('home_blueprint.route_default')}}"><i class="fa fa-home" style="font-size: 15px;">
+                    Home</i></a></li>
+        <li class="active" style="font-size: 13px;"> Fees Structure</li>
+    </ol>
+    <hr style="position: relative; top: 3px; border: none; height: 2px; background: black;">				
+    <br><br>
+    <!-- uploading Jornal number  -->
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+          <div class="card text-center">
+            <div class="card-header" style="font-size: 16px;">
+              Upload Account Information
+            </div><br>
+            <strong style="font-size: 1.1em;">*Please save the screenshot of your fee payment as well*</strong>
+            <br>
+            <div class="card-body">
+              <form action="" id="account_dtl">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="form-group row">
+                      <div class="input-group">
+                          <input type="text" placeholder="Enter The Student Number/CID" class="form-control" name="studentCid" onkeypress="return isNumberKey(event)" id="studentCid" onclick="std_details()" />
+                          <div class="input-group-append">
+                              <button type="button" id="enterCidButton" class="btn btn-primary btn-block" style="height: 100%;">Search</button>
+                          </div>
+                      </div>
+                      <span class="text-danger" id="cidNoErrorMsg"></span>
+                  </div>                  
+                  </div>
+                  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                      <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link active" id="paymentLink" href="#">Payment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pastpaymentBtn">View Past payments</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#" id="fees_structure_btn">Fees Structure</a>
+                        </li>
+                      </ul>
+                    </div>
+                </nav>
+                  <!---From Here -->
+                  <center style="display: none;" id="std_details">
+                  <table class="table" style="width: 600px;">
+                    <tbody>
+                      <tr class="table-secondary">
+                        <td>
+                          <label for="std_name">Student Name</label>
+                        </td>
+                        <td scope="row">
+                          <input type="text" class="form-control" name="studentName" id="studentName" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <label for="std_class">Class</label>
+                        </td>
+                        <td>
+                          <input type="text" class="form-control" name="std_class" id="std_class" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <label for="paymentModes">Payment Modes</label>
+                        </td>
+                        <td>
+                          <select class="form-control form-select" name="paymentModes" id="paymentModes">
+                            <option value="">---Select One---</option>
+                            <option value="Seat Confirm">Seat confirmation payment</option>
+                            <option value="Installment">Installement Payment</option>
+                            <option value="Full">Full Payment</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr id="journal_row">
+                        <td>
+                          <label for="jrn_number">Journal Number</label>
+                        </td>
+                        <td>
+                          <input type="text" placeholder="Enter Journal Number" class="form-control" name="jrn_number" id="jrn_number" required />
+                          <span class="text-danger" id="jrn_number_error"></span>
+                        </td>
+                      </tr>
+                      <tr id="account_holder_row">
+                        <td>
+                          <label for="acc_holder">Account Holder's Name</label>
+                        </td>
+                        <td>
+                          <input type="text" placeholder="Enter Account Holder's Name" class="form-control" name="acc_holder" id="acc_holder" required/>
+                        </td>
+                      </tr id="bank_type_row">
+                      <tr>
+                        <td>
+                          <label for="bank_type">Bank Type</label>
+                        </td>
+                        <td>
+                          <select class="form-control form-select" name="bank_type" id="bank_type" required>
+                            <option value="">---Select One---</option>
+                            <option value="BOBL">Bank Of Bhutan Limited</option>
+                            <option value="BNBL">Bhutan National Bank Limited</option>
+                            <option value="BDBL">Bhutan Development Bank Limited</option>
+                            <option value="PNBL">Druk Punjab Bank Limited</option>
+                            <option value="T-BANK">Tashi Bank</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr id="amount_row">
+                        <td>
+                          <label for="amount">Amount</label>
+                        </td>
+                        <td>
+                          <input type="text" placeholder="Enter amount" class="form-control" name="amount" id="amount" required/>
+                      </td>                      
+                      </tr>
+                      <tr id="screenshot_row">
+                        <td>
+                          <label for="screenShot">ScreenShot</label>
+                        </td>
+                        <td>
+                          <input type="file" class="form-control rounded-2" name="screenShot" id="screenShot" required onchange="validateFile(this)" accept="image/*" />
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+                <div class="button-center">
+                    <button type="button" id="acc_summiting" class="btn btn-sm btn-warning student_reg" style="color: white;width: 100px;height: 40px;font-size: 16px;">Pay Fee</button>
+                  </div>
+                </center>
+                    <!---Till Here -->
+                  <div class="row">
+                      <label for="amount" class="col-lg-6 col-form-label text-right"></label>     
+                  </div>
+                  <!--I need the above div because if i remove this the payment mode dropdown is getting dissapeared-->
+                    <div class="row">
+                          <label for="screenShot" class="col-lg-6 col-form-label text-right"></label>
+                    </div>
+                  <div class="container ">
+                    <div class="row">
+                      <label for="acc_holder" class="col-lg-12 col-form-label centered-label"><h5><b>Please Deposit School fees in this Account Number 203640837</b></h5></label>
+                    </div>
+                </div>
+                <div class="container mt-3" id="pastPayments" style="display: none;">
+                    <div class="row">
+                        <div class="col-lg-12 text-center" style="display: none;">
+                            <button id="pastpaymentBtn" class="btn-primary"></button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+          </form>
+        </div>
+        <div class="container" id="paymentHistory" style="display: none;">
+            <h4 class="table-name">Payment History</h4>
+            <center><hr style="width: 90px;"></center>
+            <table id="accountTable" class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Sl No.</th>
+                  <th scope="col">Account Holder's Name</th>
+                  <th scope="col">Bank Type</th>
+                  <th scope="col">Journal No.</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Payment Mode</th>
+                </tr>
+              </thead>
+              <tbody id="accountTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="table-responsive" style="height:400px;overflow:auto;display: none;" id="fees_structure">
+        <h3 style="text-align:center ;">Fees Structure :</h3> <br>
+            <table class="table table-hover">
+            <thead>
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Class</th>
+                <th scope="col">Stream</th>
+                <th scope="col">Day student</th>
+                <th scope="col">Boarding</th>
+                <th scope="col">Full Academic Session (Term I & Term II)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <th scope="row">1</th>
+                <td> VII-VIII</td>
+                <td>-</td>
+                <td>Nu.32,000</td>
+                <td>Nu.64,000</td>
+                <td>Nu. 96,000 (Ninety six thousand)</td>
+                </tr>
+                <tr>
+                <th scope="row">2</th>
+                <td>IX</td>
+                <td>-</td>
+                <td>Nu. 40,000</td>
+                <td>Nu. 56,000</td>
+                <td>Nu. 96,000 (Ninety six thousand)</td>
+                </tr>
+                <tr>
+                <th scope="row">3</th>
+                <td>X</td>
+                <td>-</td>
+                <td>Nu. 44,000</td>
+                <td>Nu. 54,000</td>
+                <td>Nu. 98,000 (Ninety eight thousand)</td>
+                </tr>
+                <tr>
+                <th scope="row">4</th>
+                <td>XI & XII</td>
+                <td>Arts/Com</td>
+                <td>Nu. 48,000</td>
+                <td>Nu. 50,000</td>
+                <td>Nu. 98,000 (Ninety eight thousand)</td>
+                </tr>
+                <tr>
+                <th scope="row">5</th>
+                <td>XI</td>
+                <td>Science</td>
+                <td>Nu. 49,500</td>
+                <td>Nu. 50,000</td>
+                <td>Nu. 99,500 (Ninety nine thousand five hundred)</td>
+                </tr>
+                <tr>
+                <th scope="row">6</th>
+                <td>XII</td>
+                <td>Science</td>
+                <td>Nu. 50,000</td>
+                <td>Nu. 52,000</td>
+                <td>Nu. 102,000 (One hundred and two thousand)</td>
+                </tr>
+                <tr>
+                <td colspan="6">
+                    <h4><b>Note:</b> The government scholarship amount (if selected) is adjustable in the above mention fees 
+                    - only the remaining will have to be paid by the parent(s)/guardian(s)<h4><br> 
+                </td>
+                </tr>
+                <tr>
+                <td colspan="6">
+                    <h4>*Admission Confirmation Fees  as mentioned below is applicable to all new students (both school and boarding) except
+                    UA scholarship and “kidu” students</h4><br>
+                </td>
+                </tr>
+                <tr>
+                <td colspan="6">
+                    <h4> <b>School:</b>  Nu.1000/- one thousand only (to meet overtime expenses of Admission Desk Committee members on duty)</h4><br>
+                    <h4><b> Boarding:</b>Nu.5000/- five thousand only (no separate collection for mattress and bed-cover)</h4><br>
+                    <h3> <u>There will be no separate collection for admission forms.</u> </h3><br>
+                    <h4>*Starting from 2022 academic session, all day students will have to pay an additional Nu.5000/- (five thousand) per Term for lunch; <u>no student will be allowed to move out during class days unless authorized by SAT.</u> </h4><br>
+                    <h4>The school also runs two Paying Guest (PG) Hostels: <br>
+                    *Wolokha PG (for boys) – UA Campus II is 3 Km away but has a congenial study environment <br>
+                    A separate transport fee of Nu.2500/- (Two thousand five hundred) per Term is collected for the daily bus service</h4><br>
+                </td>
+                </tr>
+                <tr>
+                <td colspan="6">
+                    <h4>Gomo Delux PG (for girls) <br><br>
+                    A separate fee of Nu.3000/- (three thousand) per Term is collected as girls are kept in rooms with better facilities. It is located adjacent to the school and enjoys an autonomous mess arrangement also.</h4><br>
+                    <h4>*A separate <u>security deposit of Nu.3000/-</u>  (Three thousand) for boarding students and Nu.2000/- (two thousand) day students (refundable if not deducted for damages/fines) will have to be paid once at the time of admission.</h4><br>
+                    <h4>Also, Nu.3000/- (Three thousand) ICT Fees per annum is charged separately and an additional Nu1000/- for <u>tablet/smart phone </u>care for boarding students. As mentioned every student must bring his/her own <u>tablet/smart phone</u> for blended approach in NNC/eResources – a requirement as per the Learning Management System (LMS). The school is equipped with free intranet facilities – upgraded from 100 to 500 concurrent users in 2022 academic session</h4>
+                </td>
+                </tr>
+                <tr>
+                <td colspan="6">
+                    *For more details, like installments/mode of payment, please contact our <b>Finance Officer Ms Dechen Peldon on 17671602</b>
+                </td>
+                </tr>
+                <tr>
+                <td colspan="6">
+                    <h4>*There are also licensed private PG Hostels near UA (for both girls and boys) for parents/guardians  in case they are not able to get boarding or choose something different.<br>
+                    <b>Comments:</b>  Kindly note that the above fee in the table was approved in October of 2017 by PSD, DSE & MoE.</h4>
+                </td>
+                </tr>
+            </tbody>
+            </table>
+            <br><br>
+        </div><!-- End -->
+          </div>
+        </div>
+    </div>
+</div>
+<br><br>
+   <script>
+    //For showing the error message in the journal number
+    document.addEventListener("DOMContentLoaded", function(){
+      const errorMessage = document.getElementById("errorMessage");
+      const jrn_number = document.getElementById("jrn_number");
+
+      jrn_number.addEventListener("input", function() {
+        if (jrn_number.value.length !== 6) {
+            errorMessage.style.display = "inline"; // Display error message
+        } else {
+            errorMessage.style.display = "none"; // Hide error message
+        }
+    });
+    });
+
+    //amount .00 and its configuration
+    document.addEventListener('DOMContentLoaded', function() {
+    var amountInput = document.getElementById('amount');
+
+    amountInput.addEventListener('input', function(event) {
+        var inputValue = amountInput.value;
+
+        // Remove any non-numeric characters and leading zeros
+        inputValue = inputValue.replace(/[^0-9]/g, '').replace(/^0+/, '');
+
+        // Add comma separators for thousands
+        inputValue = numberWithCommas(inputValue);
+
+        // Add decimal point and trailing zeros
+        if (inputValue.length > 2) {
+            inputValue = inputValue.slice(0, -2) + '.' + inputValue.slice(-2);
+        } else if (inputValue.length === 2) {
+            inputValue = '0.' + inputValue;
+        } else if (inputValue.length === 1) {
+            inputValue = '0.0' + inputValue;
+        } else {
+            inputValue = '0.00';
+        }
+
+        amountInput.value = inputValue;
+    });
+});
+
+// Function to add comma separators for thousands
+function numberWithCommas(x) {
+    // Convert the number to a string
+    var str = x.toString();
+
+    // Check if the number is greater than 99999
+    if (str.length > 8) {
+        // Insert a comma after the first three digits
+        str = str.slice(0, str.length - 7) + ',' + str.slice(str.length - 7);
+    } else if (str.length > 6) {
+        // Insert a comma after the first two digits
+        str = str.slice(0, str.length - 5) + ',' + str.slice(str.length - 5);
+    }
+
+    return str;
+}
+   </script>
+   
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+
+    <script>
+        // Function to hide the specified rows
+        function hideRows() {
+            $('#journal_row, #account_holder_row, #bank_type_row, #amount_row, #screenshot_row').hide();
+        }
+    
+        // Function to show the specified rows
+        function showRows() {
+            $('#journal_row, #account_holder_row, #bank_type_row, #amount_row, #screenshot_row').show();
+        }
+    
+        // Hide the rows initially
+        $(document).ready(function() {
+            hideRows();
+        });
+    
+        // Event handler for when the payment mode is selected
+        $('#paymentModes').change(function() {
+            var selectedMode = $(this).val();
+            if (selectedMode === "") {
+                hideRows();
+            } else {
+                showRows();
+            }
+        });
+    </script>
+    
+<script>
+    // Hide the payment table initially
+$('#std_details').hide();
+
+// Function to show the payment table
+function showPaymentTable() {
+    $('#std_details').show();
+}
+
+// Function to hide the payment table
+function hidePaymentTable() {
+    $('#std_details').hide();
+}
+
+// When the search button is clicked, show the payment table
+$('#enterCidButton').click(function() {
+    showPaymentTable();
+});
+
+// If there's no output returned from the server, hide the payment table
+function handleNoOutputFromServer() {
+    hidePaymentTable();
+}
+
+// Example function to simulate server response
+function simulateServerResponse() {
+    // Assuming this function gets called after an AJAX request
+    var responseData = []; // Assume empty array for no output
+    if (responseData.length === 0) {
+        handleNoOutputFromServer();
+    } else {
+        // Handle response data as needed
+    }
+}
+
+// Call simulateServerResponse() function where appropriate, typically after making an AJAX request
+
+  $(document).ready(function() {
+    // Function to show std_details when Payment link is clicked
+    $("#paymentLink").click(function(event) {
+        event.preventDefault(); // Prevent default link behavior
+        // Hide past payments
+        $('#paymentHistory').hide();
+
+        $("#fees_structure").hide();
+        // Optionally, you can hide other elements here if needed
+        // Example: $("#fees_structure").hide();
+    });
+
+    // Function to hide std_details when Past payments link is clicked
+    $("#pastpaymentBtn").click(function(event) {
+        event.preventDefault(); // Prevent default link behavior
+
+        // Hide std_details
+        $("#std_details").hide();
+
+        // Show past payments
+        $("#paymentHistory").show();
+        
+        $("#fees_structure").hide();
+    });
+    $("#fees_structure_btn").click(function(event) {
+        event.preventDefault(); // Prevent default link behavior
+
+        // Hide std_details
+        $("#std_details").hide();
+
+        // Show past payments
+        $("#paymentHistory").hide();
+        
+        $("#fees_structure").show();
+    });
+
+    // Your other JavaScript code goes here...
+  $('#accountTable').DataTable();
+   var amountInput = document.getElementById('amount');
+        amountInput.addEventListener('focus', function() {
+            if (!amountInput.value.includes('.00')) {
+                amountInput.value += '.00';
+            }
+        });
+});
+
+var inputFields = document.querySelectorAll("input");
+var labels = document.querySelectorAll("label");
+var selectFields = document.querySelectorAll("select");
+
+// Loop through each input field and hide it
+for (var i = 1; i < inputFields.length; i++) {
+  inputFields[i].style.display = "none";
+}
+
+// Loop through each label and hide it
+for (var i = 1; i < labels.length; i++) {
+  labels[i].style.display = "none";
+}
+
+// Loop through each select field and hide it
+for (var i = 0; i < selectFields.length; i++) {
+  selectFields[i].style.display = "none";
+}
+document.getElementById("acc_summiting").style.display="none"; 
+document.getElementById("pastPayments").style.display="none";
+
+function onEnterStudentNumber(event) {
+  event.preventDefault(); // Prevent the default form submission
+
+  var studentCid = $('#studentCid').val();
+
+  // Remove any existing error messages and classes
+  $('#studentCid').removeClass('is-invalid');
+  $('#cidNoErrorMsg').text('').hide();
+  
+  // Check if the field is empty
+  if (studentCid.trim() === '') {
+    // Show error message for empty field
+    $('#studentCid').addClass('is-invalid');
+    $('#cidNoErrorMsg').text('CID or Student Number is required').show();
+    clearFields(); // Clear names and hide fields
+    return;
+  }
+
+  
+// Check if the input contains exactly 11 or 17 digits
+if (!(studentCid.length === 11 || studentCid.length === 17)) {
+  // Show error message for invalid length
+  $('#studentCid').addClass('is-invalid');
+  $('#cidNoErrorMsg').text('CID should be 11 digits or student number should be 17 digits').show();
+  clearFields(); // Clear names and hide fields
+  return;
+}
+
+  // If validation passes, remove error classes and continue with further logic
+  $('#studentCid').removeClass('is-invalid');
+  $('#cidNoErrorMsg').text('').hide();
+
+  // Check if the input is a number
+  $.ajax({
+    type: 'GET',
+    url: '/checkForIndexNo',
+    data: { studentCid: studentCid },
+    success: function(response) {
+      if (response.hasOwnProperty("error")) {
+        swal('Error', response.error, 'error');
+        clearFields(); // Clear names and hide fields
+        
+      } else {
+        // Show the other input fields
+        $("#std_class, #studentName, #pastpaymentBtn").show();
+
+        // Optional: Disable the code input field
+        $(" #std_class, #studentName").prop('readonly', true);
+
+        // Use the data as needed
+        $("#studentName").val(response[0].std_name);
+        $("#std_class").val(response[0].class_name);
+        for (var i = 0; i < 4; i++) {
+          labels[i].style.display = "block";
+        }
+        document.getElementById("acc_summiting").style.display = "block";
+        document.getElementById("pastPayments").style.display="block";
+        $("#std_class, #studentName, #paymentModes").show();
+        $('#paymentModes').change(function() {
+          $("#jrn_number, #bank_type, #acc_holder, #acc_summiting, #amount, #screenShot").show();
+          for (var i = 4; i < labels.length; i++) {
+            labels[i].style.display = "block";
+          }
+        });
+
+    
+      }
+    },
+    error: function() {
+      swal("An error occurred while checking the code.", "", "error");
+      clearFields(); // Clear names and hide fields
+    }
+  });
+}
+
+
+// ...
+
+// Function to clear names and hide fields and labels
+function clearFields() {
+  $("#studentName").val('');
+  $("#std_class").val('');
+  $('#paymentModes').val('');
+  $("#std_class, #studentName, #paymentModes, #jrn_number, #bank_type, #acc_holder, #amount, #screenShot, #pastPayments").hide();
+  for (var i = 1; i < labels.length; i++) {
+    labels[i].style.display = "none";
+  }
+  document.getElementById("acc_summiting").style.display = "none";
+}
+
+
+function onPastPaymentButtonClick(){
+    var studentCid = $('#studentCid').val();
+        $.ajax({
+          type: 'GET',
+          url: '/getPaymentHistory',
+          data: { studentCid: studentCid },
+          success: function(response) {
+            // Clear the table body before populating it with new data
+            var table = $('#accountTable').DataTable();
+            table.clear().draw(); // Clear existing data
+
+            // Iterate over the response data and create table rows
+            for (var i = 0; i < response.data.length; i++) {
+              var history = response.data[i];
+              var row = [
+                i + 1,
+                history['Account Holder'],
+                history['Bank Type'],
+                history['Journal No.'],
+                history['Amount'],
+                history['Payment Mode']
+              ];
+
+              // Append the row to the table body
+              table.row.add(row).draw(false); // Add new data
+            }
+
+            // Show the payment history table
+          },
+          error: function() {
+            swal("An error occurred while retrieving the payment history.", "", "error");
+            clearFields(); // Clear names and hide fields
+          }
+        });
+}
+
+// Bind the function to the click event of the button
+$('#enterCidButton').click(onEnterStudentNumber);
+
+// Bind the function to the keyup event of the input field
+$('#studentCid').keyup(onEnterStudentNumber);
+
+$('#pastpaymentBtn').click(onPastPaymentButtonClick);
+// Bind the function to the submit event of the form
+$('#account_dtl').submit(function(event) {
+  event.preventDefault(); // Prevent the default form submission
+});
+
+
+// function which only accepts number and dots only
+function isNumberKey(evt) {
+  var charCode = (evt.which) ? evt.which : event.keyCode;
+
+  // Allow numeric values (0-9), the dot (.), and control keys (like backspace)
+  if ((charCode < 48 || charCode > 57) && charCode !== 46 && charCode !== 8) {
+    return false;
+  }
+
+  // Allow the input event
+  return true;
+}
+    
+    $("#acc_summiting").on("click", function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+        // Validate the "Journal Number" field
+        var jrnNumber = $("#jrn_number").val().trim();
+    if (jrnNumber.length !== 6 || !/^\d+$/.test(jrnNumber)) {
+      $("#jrn_number").addClass("is-invalid");
+      $("#jrn_number_error").text("Journal Number must be 6 digits").show();
+      return;
+    } else {
+      $("#jrn_number").removeClass("is-invalid");
+      $("#jrn_number_error").text("").hide();
+    }
+
+      // Validate the screenshot file
+  var screenshotFile = $("#screenShot")[0].files[0];
+  if (!screenshotFile) {
+    // No file selected
+    $("#screenShot").addClass("is-invalid");
+    $("#screenshot_error").text("Please select a screenshot").show();
+    return;
+  } else {
+    // Check the file type (for example, only allow image types)
+    var allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (allowedTypes.indexOf(screenshotFile.type) === -1) {
+      $("#screenShot").addClass("is-invalid");
+      $("#screenshot_error").text("Invalid file type. Please select an image file").show();
+      return;
+    } else {
+      $("#screenShot").removeClass("is-invalid");
+      $("#screenshot_error").text("").hide();
+    }
+  }
+
+    var form = document.getElementById("account_dtl");
+    var data = new FormData(form);
+    var invalidInputs = [];
+
+    // Remove existing error messages and red marks
+    $(".form-control").removeClass("is-invalid");
+
+    // Perform validation for each input excluding the search inputs
+    $(".form-control:not(.dataTables_filter input)").each(function() {
+        var fieldValue = $(this).val().trim();
+        var fieldName = $(this).attr("name");
+        var placeholder = $(this).attr("placeholder");
+
+        if (fieldValue === '') {
+            invalidInputs.push(fieldName);
+            // Add red mark to the field
+            $(this).addClass("is-invalid");
+        }
+    });
+
+    // Perform validation for each select field excluding the search selects
+    $("select:not(.dataTables_filter select)").each(function() {
+        var fieldValue = $(this).val();
+        var fieldName = $(this).attr("name");
+
+        if (fieldValue === '' || fieldValue === undefined) {
+            invalidInputs.push(fieldName);
+            // Add red mark to the field
+            $(this).addClass("is-invalid");
+        }
+    });
+
+    if (invalidInputs.length === 0) {
+        $(this).prop("disabled", true).text("Loading...");
+        // Submit the form if all inputs are valid
+        $.ajax({
+            type: 'POST',
+            url: '/account_submitting',
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            beforeSend: function () {
+                $("#acc_summiting").text("Loading....")
+                $("#acc_summiting").prop("disabled", true)
+                $("#acc_summiting").addClass("disabled")
+            },
+            success: function(res) {
+              if (res.hasOwnProperty("error")) {
+        swal('Error', res.error, 'error');
+            $(".form-control").removeClass("is-invalid");
+            $("#acc_summiting").prop("disabled", false);
+            $("#acc_summiting").text("Submit");
+          } 
+       else{
+            swal("Information successfully saved", res, "success")
+                .then(function() {
+                    $('#account_dtl')[0].reset();
+                    window.location = "/fees-detail";
+                });
+              }
+            },
+            error: function(xhr, status, error) {
+                // Enable the submit button in case of error
+                $("#acc_summiting").prop("disabled", false);
+                swal("Error", "Try once again by using the student CID", "error");
+            },
+            complete: function() {
+                // Re-enable the button after the request is complete
+                $("#acc_summiting").prop("disabled", false);
+                $("#acc_summiting").removeClass("disabled");
+                $("#acc_summiting").display("none");
+            }
+        });
+    } else {
+        swal("Invalid input", "Please fill in the required fields.", "error");
+    }
+});
+
+// Remove red marks when the user starts entering values
+$(".form-control").on("input", function() {
+    $(this).removeClass("is-invalid");
+});
+
+$("select").on("change", function() {
+    $(this).removeClass("is-invalid");
+});
+
+
+// Remove red marks when the user starts entering values in the "Journal Number" field
+$("#jrn_number").on("input", function() {
+    $(this).removeClass("is-invalid");
+    $("#jrn_number_error").text("").hide();
+});
+
+</script>
+
+{% endblock javascripts %}

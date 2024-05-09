@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body border="1" style="font-size: 8px;" background="/crimsonlogic/trade/tfb2/rel1_0/images/background.png">
+  <img src="/crimsonlogic/trade/tfb2/rel1_0/images/btfn.png" alt=""width="500" height="90" style="position:absolute;padding-bottom: 40px;text-align: center;"/> 
+<h3 style="text-align: center;text-transform: uppercase;padding: 20px 0;font-weight: 500;"><strong>CERTIFICATE OF ORGIN</strong></h3> <br>
+<div>
+    <table>
+        <tbody>
+            <tr>
+              <td colspan="4">&nbsp;&nbsp;1. Goods Consigned From (Exporters' Business Name, Address, Country)<br><br>
+                <span align="left">&nbsp;&nbsp;&nbsp;<strong>Name: </strong> #{#printDTO.getExporter()==null?"":#printDTO.getExporter().getName()}</span><br><br>  
+                <span align="left">&nbsp;&nbsp;&nbsp;<strong>City/Dzongkhag:</strong>#{#printDTO.getExporter()==null?"":#printDTO.getExporter().getPhysical_adr_city()} , #{#printDTO.getExporter()==null?"":#printDTO.getExporter().getPhysical_adr_street_no()}</span><br><br> 
+                <span align="left">&nbsp;&nbsp;&nbsp;<strong>Country: </strong>BHUTAN</span><br><br>  
+                <span align="left">&nbsp;&nbsp;&nbsp;<strong>Phone Number: </strong></span> 
+              </td>
+                <td colspan="5" align="left"><strong>Reference No: </strong>#{#printDTO.getHeader()==null?"":#printDTO.getHeader().getApp_ref_number()}<br>
+                  <span align="center"><strong>BHUTAN BANGLADESH PREFERENTIAL TRADING
+                      ARRANGEMENT (BB-PTA)</strong></span><br><br>  
+                  <span align="center">(Combined declaration and certificate)</span><br><br>    
+                  <span align="center">Issued in <strong>BHUTAN</strong></span><br><br>
+                  <span align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Country)</span><br><br>  
+                  <span align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(See Notes Overleaf)</span><br><br> 
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;2. Goods Consigned To (Consignee's Name, Address, Country)<br><br>
+                    <span align="left">&nbsp;&nbsp;&nbsp;<strong>Name:</strong> #{#printDTO.getImporter()==null?"":#printDTO.getImporter().getName()}</span><br><br>  
+                    <span align="left">&nbsp;&nbsp;&nbsp;<strong>City/Dzongkhag: </strong>#{#printDTO.getImporter()==null?"":#printDTO.getImporter().getPhysical_adr_city()} , #{#printDTO.getImporter()==null?"":#printDTO.getImporter().getPhysical_adr_street_no()}</span><br><br> 
+                    <span align="left">&nbsp;&nbsp;&nbsp;<strong>Country: </strong>BANGLADESH</span><br><br>  
+                    <span align="left">&nbsp;&nbsp;&nbsp;<strong>Phone Number: </strong></span><br>
+                </td>
+                <td rowspan="2" colspan="10" align="left" valign="top"><strong>4. For Official Use</strong></td>
+            </tr>
+            <tr>
+                <td colspan="4" align="center"><strong>3. Means of Transport and route (as far as known) </strong> <br><br>#{#printDTO.getTransport()==null?"":#printDTO.getTransport().getMode()}</td>
+            </tr>
+            <tr><td colspan="9" border="0"></td></tr>            
+            <tr colspan="9" border="0">
+            </tr>
+        </tbody>
+    </table>
+<div style="margin-top: -10px;"><span style="font-size: 8px;">#{#printDTO.printTableHeaders('<b><span style="Width: 130px;">5. HS Code </b>','<b> 6. Marks and numbers of Packages</b>','<b>7. Kind of package: description of goods </b>','<b>8. Origin criterion (see Notes overleaf) </b>','<b>9. Gross weight or other quantity</b>','<b>10. Invoice No and Invoice date</b>')}</span></div>
+        <div style="color: black; font-family: Arial, Verdana, sans-serif;"><span style="font-size: 8px;">#{#printDTO.printTableWithItems(#printDTO.getItems(),'hscode','no_of_packages','description','countryName','comm_name_oth_desc','comm_name_desc')}</span></div>
+
+        <table>
+            <tbody>
+                <tr>
+                    <td colspan="4" align="center">
+                        <strong><span style="top: -20px;">11. Declaration By The Exporter</span></strong><br><br>
+                        The undersigned hereby declares that the above details and statements are correct; that all goods were produced in<br><br>BHUTAN <br>(country) <br>and that they comply with the origin requirements specified for those goods in <strong>BB-PTA</strong> for goods exported to <br><br>BANGLADESH <br>(Importing country) <br><br>
+                        <span class="signature"></span>
+                        <br>
+                        Place and date, signature of the authorised signatory.
+                    </td>
+                    <td colspan="5">
+                        <strong><span align="center">12. Certificate</span></strong><br>
+                        It is hereby certified, on the basis of control carried out that the exporter is correct. <br>
+                        <span></span><br><br><br><br><br><br><br><br><br>
+                        Place and date, signature and stamp of certifying authority.
+                        <br><br><br>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+      </div><br><br><br><br><br><br><br><br><br>
+          <hr width="100%">
+          <strong>I. To qualify for preference, products must:</strong>
+              <table border="0" width="550">
+                  <tr>
+                      <td>
+                          <ul>
+                              <li style="margin-left: 2em;">Fall within a description of products eligible for concessions in the country of destination under this agreement</li>
+                              <li style="margin-left: 2em;">Comply with <strong>BB-PTA</strong> Rules of Origin. Each Article in a consignment must qualify separately in its own right; and</li>
+                              <li style="margin-left: 2em;">Comply with the consignment conditions specified by the <strong>BB-PTA</strong>Rules of Origin. In general products must be consigned directly within the meaning of &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rule 10 hereof from the country of exportation to the country of destination.</li>
+                          </ul>
+                      </td>
+                  </tr>
+              </table>
+          <strong>II. Entries to be made in Box 8</strong>
+          <table border="0" width="550">
+              <tr>
+                  <td>
+                      <ul>
+                          <li>&nbsp;&nbsp;&nbsp;Preference products must be wholly produced or obtained in the exporting Party in accordance with Rule 6 of the <strong>BB-PTA</strong> Rule of Origin, or where not &nbsp;&nbsp;&nbsp;&nbsp;wholly produced or
+                              obtained in the exporting Party must be eligible under Rule 7.
+                          </li>
+                          <li>&nbsp;&nbsp;&nbsp;Products wholly produced or obtained enter the letter ‘A’ in box 8.</li>
+                          <li>&nbsp;&nbsp;&nbsp;Products not wholly produced or obtained; the entry in box 8 should be as follows:</li>
+                      </ul>        
+                  </td>
+              </tr>
+          </table>
+      </span>
+      <table border="0" width="500">
+          <tr>
+              <td>
+                  <ul>
+                      <li>
+                          Enter letter ‘B’ in box 8 for products, which meet the origin criterion according to Rule 7. Entry of letter would be followed by the sum of the value of materials, parts or produce originating from non-parties or undetermined origin used, expressed as a percentage of the f.o.b. value of the products example B(… ) percent.
+                      </li>
+                  </ul>
+              </td>
+          </tr>
+      </table>
+      <strong>III. Entries to be made in Box 4</strong>
+          <table border="0" width="550">
+              <tr>
+                  <td>
+                      <ul>
+                          <li>&nbsp;&nbsp;&nbsp;In case of issuance of certificates retrospectively Box 4 should bear the words “ISSUED RETROSPECTIVELY”. <br>&nbsp;&nbsp;&nbsp; In case of issuance of certified true copies Box 4 should bear the words
+                              “CERTIFIEDTRUE COPY
+                          </li>
+                      </ul>
+                  </td>
+              </tr>
+          </table>
+          <br><br>
+          <span>
+              <h4 align="center"> 
+              <!-- <strong>
+                  This Certificate of Origin is equivalent to the original copy. <br>
+                  Tele :+975 - 2-328334, 321337, 322407.
+              </strong> -->
+              </h4>
+          <!-- </p> -->
+      </body>
+      </html>

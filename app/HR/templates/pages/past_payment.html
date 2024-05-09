@@ -1,0 +1,176 @@
+{% extends 'layouts/hr_main.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+<!-- Specific CSS goes HERE -->
+ <!-- Include Fancybox CSS -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-lg-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Past Payment History</h4>
+                        <hr>
+                        <div class="card-body">
+                            <div class="row">
+                               
+                                <div class="table-responsive">
+                                    <table class="table align-items-center table-flush" id="payment_history">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col" >SL</th>
+                                                <th scope="col" >CID</th>
+                                                <th scope="col" >Senders Name</th>
+                                                <th scope="col" >Amount</th>
+                                                <th scope="col" >Payment Mode</th>
+                                                <th scope="col" >Student Name</th>
+                                                <th scope="col" >Class</th>
+                                                <th scope="col" >Date Added</th>
+                                                <th scope="col" style="text-align:center">Action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Screenshot View</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close" onclick="reloadPage()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              <div class="col-md-12 col-lg-12">
+                <div class="gal-detail thumb">
+                    <center>
+                        <img class="thumb-img-mark" id="zoomImage" alt="Screenshot Image" style="height: 320px; width: 200px;transform: scale(1.2);">
+                    </center>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                    data-dismiss="modal" onclick="reloadPage()">Close</button>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- end modal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" 
+crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function () {
+        loadUsers()
+    });
+    function loadUsers() {
+        $('#payment_history').DataTable({
+            'processing': true,
+            'serverSide': true,
+            'bDestroy': true,
+            'serverMethod': 'POST',
+            'ajax': {
+                'url': 'hr/past_payments'
+            },
+            'columns': [
+                { data: 'sl' },
+                { data: 'parent_cid' },
+                { data: 'acc_holder' },
+                { data: 'amount' },
+                { data: 'paymentmodes' },
+                { data: 'name' },
+                { data: 'std_class' },
+                { data: 'date_added' },               
+                {
+                    "render": function (data, type, full, meta) {
+                        console.log(full)
+                        return '<div class="dropdown">' + 
+                            '<button class="payment-for-Full btn btn-primary text-light text-center view-screenshot" data-toggle="modal" data-target="#exampleModal" data-screenshot="' + full.screen_shot + '">View</button>' +
+                                ' <a class="btn btn-danger btn-icon-only text-light" href="javascript:void(0)"  onclick="deletePastPayments(\'' + full.ad_id + '\')" role="button">' +
+                                '<b> Delete</b>' +
+                                '</a>' +
+                            '</div>'
+                    }
+                },
+            ],
+            language: {
+                paginate: {
+                    next: '&#8594;', // or '→'
+                    previous: '&#8592;' // or '←' 
+                }
+            },
+            "ordering": false
+        });
+    };
+    $(document).on('click', '.view-screenshot', function() {
+        var screenshotUrl = $(this).data('screenshot');
+        $('#zoomImage').attr('src', screenshotUrl);
+        $('#exampleModal').modal('show');
+    });
+    function deletePastPayments(id) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+            }).then(function (isConfirm) {
+            if (isConfirm.value) {
+                $.ajax({
+                    url: '/pastPayments/' + id,
+                    type: 'POST',
+                    success: function (res) {
+                        console.log(res)
+                        if(res === "done"){
+                            swal({
+                            title: 'Success!',
+                            text: 'User delete successful!',
+                            type: 'success'
+                        }).then(function () {
+                            location.reload()
+                        });
+                        }
+                        else{
+                        }
+                    },
+                    error: function () {
+                        swal("Error", "Error while deleting user. Refresh page and try again :)", "error");
+                    }
+                })
+            } else {
+                swal("Cancelled", "Your data is safe :)", "error");
+            }
+        })
+    }
+    function reloadPage(){
+        location.reload();
+    }
+</script>
+
+{% endblock javascripts %}
