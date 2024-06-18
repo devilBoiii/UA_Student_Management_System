@@ -307,9 +307,11 @@ def all_std():
 
     if search_value:
         search_query = "AND (cc.class_name LIKE :search_value " \
-                       "OR P.student_cid LIKE :search_value " \
-                       "OR (P.first_name || ' ' || P.last_name) LIKE :search_value) "
+                    "OR P.student_cid LIKE :search_value " \
+                    "OR (P.first_name || ' ' || P.last_name) LIKE :search_value " \
+                    "OR P.status LIKE :search_value) "
         params['search_value'] = f"%{search_value}%"
+
 
     str_query = f'''SELECT P.*, COUNT(*) OVER() AS count_all, P.id, cc.class_name 
                     FROM public.tbl_students_personal_info AS P
@@ -353,12 +355,11 @@ def application_update():
     narration = request.form.get('narration')
     id = request.form.get('app_id')
     user_mail = request.form.get('email')
-    all_name = engine.execute("SELECT CONCAT(first_name, ' ', last_name) FROM tbl_students_personal_info WHERE ID=%s", (id,))
-    #name = request.form.get('first_name')+' '+request.form.get('last_name')
+    full_name = engine.execute("SELECT CONCAT(first_name, ' ', last_name) FROM tbl_students_personal_info WHERE ID=%s", (id,))
+    name = full_name.fetchone()
     # reject
     #approved
     #reject For Amendment
-    name = all_name.fetchone()[0]
     if(status == 'reject'):
         # reject
         connection.execute('UPDATE public.tbl_students_personal_info SET status=%s,  narration=%s, updated_at=%s, rejected_at=%s WHERE id=%s',
@@ -375,6 +376,7 @@ def application_update():
     join public.tbl_academic_detail ac on std.id=ac.std_personal_info_id
 	join public.class cl on ac.admission_for_class=cl.class_id 
 	where std.id=%s'''
+    print("Herebro!!!___!!")
     getClass=connection.execute(classId,id).scalar()
     send_application_mail(name, status, getClass,narration, user_mail)
     

@@ -1,6 +1,6 @@
 
 """
-Copyright (c) 2022 - Ugyen Dorji
+Copyright (c) 2024 - Ugyen Academy
 """
 
 from flask import Blueprint

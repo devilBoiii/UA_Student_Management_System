@@ -1,5 +1,4 @@
-<body>
-    {% extends 'layouts/hr_mains.html' %}
+    {% extends 'layouts/admin_mains.html' %}
 
     {% block title %} Student Management System {% endblock title %}
     <!-- Specific CSS goes HERE -->
@@ -18,6 +17,7 @@
 
     {% endblock stylesheets %}
     {% block content %}
+    <body>
 
     <div class="main-panel">
         <div class="content-wrapper">
@@ -25,7 +25,7 @@
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Student Details</h4>
+                            <h4 class="card-title">Student Details Admin</h4>
                             <hr>
                             <div class="pos-rel">
                                 <!-- Nav pills -->
@@ -503,7 +503,7 @@
                 var form_data = new FormData($('#update_form')[0])
                 $.ajax({
                     type: "POST",
-                    url: "/update-status-hr",
+                    url: "/update-status",
                     data: form_data,
                     dataType: "json",
                     contentType: false,
@@ -517,12 +517,12 @@
                     },
                     success: function (data) {
                         swal('Success', 'Application status updated successfully', 'success').then(function () {
-                            window.location = '/student-application-list'
+                            window.location = '/admin-student-application-list'
                         })
                     },
                     error: function () {
                         swal('Success', 'Application status updated successfully', 'success').then(function () {
-                            window.location = '/student-application-list'
+                            window.location = '/admin-student-application-list'
                         })
                     }
                 });

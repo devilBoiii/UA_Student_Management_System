@@ -9,7 +9,7 @@ from datetime import datetime
 import pytz
 from flask import make_response
 import pdfkit
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,text,null
 from config import Config
 
 engine = create_engine(Config.SQLALCHEMY_DATABASE_URI)
@@ -163,7 +163,7 @@ def admin_std_app_list():
     user_id=current_user.id
     details_str = '''SELECT U.*, UD.* FROM public."User" AS U LEFT JOIN public.user_detail as UD on U.id = UD.user_id where U.id = %s'''
     result = connection.execute(details_str, user_id).fetchall()
-    return render_template('/pages/student-applications/student_application_list.html', result=result)
+    return render_template('/pages/student-applications/student_application_list_admin.html', result=result)
 
 @blueprint.route('/admin-basic-tables')
 @login_required
@@ -252,6 +252,58 @@ def stdList():
 
     return users_st
 
+@blueprint.route('/users-std-applications/<selected_class>', methods=['GET', 'POST'])
+def stdList_filter(selected_class):
+    draw = request.form.get('draw')
+    row = request.form.get('start')
+    row_per_page = request.form.get('length')
+    search_value = request.form['search[value]']
+    search_query = ''
+    params = {'selected_class': selected_class}
+
+    if search_value:
+        search_query = "AND (cc.class_name LIKE :search_value " \
+                    "OR P.student_cid LIKE :search_value " \
+                    "OR (P.first_name || ' ' || P.last_name) LIKE :search_value) "
+        params['search_value'] = f"%{search_value}%"
+
+    str_query = f'''SELECT P.*, COUNT(*) OVER() AS count_all, P.id, cc.class_name 
+                    FROM public.tbl_students_personal_info AS P
+                    INNER JOIN public.tbl_academic_detail AS A ON P.id = A.std_personal_info_id
+                    INNER JOIN public.class AS cc ON A.admission_for_class = cc.class_id 
+                    WHERE P.id IS NOT NULL {search_query} AND cc.class_id = :selected_class
+                    ORDER BY status DESC 
+                    LIMIT :limit OFFSET :offset'''
+
+    params['limit'] = int(row_per_page)
+    params['offset'] = int(row)
+
+    users_std = connection.execute(text(str_query), params).fetchall()
+
+    data = []
+    count = 0
+    for index, user in enumerate(users_std):
+        data.append({
+            'sl': int(row) + index + 1,
+            'student_code': user.student_code,
+            'student_cid': user.student_cid,
+            'class': user.class_name,
+            'first_name': user.first_name + " " + user.last_name,
+            'student_email': user.student_email,
+            'status': user.status,
+            'id': user.id
+        })
+        count = user.count_all
+
+    response_std = {
+        "draw": int(draw),
+        "iTotalRecords": count,
+        "iTotalDisplayRecords": count,
+        "aaData": data
+    }
+    return jsonify(response_std)
+
+
 @blueprint.route('/users-std-hr', methods=['GET','POST'])
 def stdListHR():
     if(is_human_resource()):
@@ -262,7 +314,7 @@ def stdListHR():
     return users_st
 
 # fetch student details
-@blueprint.route('/std-detials/<id>', methods=['GET'])
+@blueprint.route('/admin-std-detials/<id>', methods=['GET'])
 @login_required
 def std_details(id):
     user_id = current_user.id
@@ -286,11 +338,12 @@ def std_details(id):
         'inner join public.tbl_village_list as village on village.village_id = P.student_village '
         'WHERE P.id =%s',
         id).first()
-    return render_template('/pages/student-applications/studentinfo.html', std=std_details, std_info=std_info, result=result)
+    return render_template('/pages/student-applications/studentinfo_admin.html', std=std_details, std_info=std_info, result=result)
 
 @blueprint.route('/update-status', methods=['POST'])
 def update_app_status():
-    if(is_admin()):
+    if is_admin():
+        print("Herebro!!_____")
         return application_update()
     else:
         return "Failed"

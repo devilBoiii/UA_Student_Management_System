@@ -1,7 +1,7 @@
 from operator import add
 from uuid import uuid4
 from flask import request,jsonify
-from app.admin.service import send_application_mailUser
+from app.admin.service import send_application_mailUser, send_application_mail
 from config import Config
 from sqlalchemy import create_engine,text
 from datetime import datetime
@@ -906,3 +906,37 @@ def past_payment():
     }
 
     return jsonify(response)
+
+def application_update_hr():
+    print("See Here")
+    status = request.form.get('action')
+    narration = request.form.get('narration')
+    id = request.form.get('app_id')
+    user_mail = request.form.get('email')
+    name = engine.execute("SELECT CONCAT(first_name, ' ', last_name) FROM tbl_students_personal_info WHERE ID=%s", (id,))
+    full_name = name.fetchone()
+    # reject
+    #approved
+    #reject For Amendment
+    if(status == 'reject'):
+        # reject
+        connection.execute('UPDATE public.tbl_students_personal_info SET status=%s,  narration=%s, updated_at=%s, rejected_at=%s WHERE id=%s',
+                    status, narration, datetime.now(), datetime.now(), id)
+    elif (status=='reject For Amendment'):
+        #reject for Amendment
+        connection.execute('UPDATE public.tbl_students_personal_info SET status=%s,  narration=%s, updated_at=%s, rejectforamend_at=%s WHERE id=%s',
+                    status, narration, datetime.now(), datetime.now(), id)    
+    else:
+        # approved
+        print("reachedHere!!")
+        connection.execute('UPDATE public.tbl_students_personal_info SET status=%s, narration=%s, updated_at=%s, approved_at=%s WHERE id=%s',
+                    status, narration, datetime.now(), datetime.now(), id)
+    classId='''select cl.class_name from public.tbl_students_personal_info std
+    join public.tbl_academic_detail ac on std.id=ac.std_personal_info_id
+	join public.class cl on ac.admission_for_class=cl.class_id 
+	where std.id=%s'''
+    print("Herebro!!!___!!")
+    getClass=connection.execute(classId,id).scalar()
+    send_application_mail(full_name, status, getClass,narration, user_mail)
+    
+    return 'success'

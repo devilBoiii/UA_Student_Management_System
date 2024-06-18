@@ -8,7 +8,11 @@
 {% endblock stylesheets %}
 
 {% block content %}
-
+<style>
+    #class_list{
+        padding-left: 2em;
+    }
+</style>
 <!-- partial -->
 <div class="main-panel">
   <div class="content-wrapper">
@@ -18,17 +22,7 @@
           <div class="card-body">
             <h4 class="card-title">Student Application List</h4>
             <hr>
-
-            <!-- <div>
-                <p>Classes:</p>
-                <ul>
-                    {% for admission_class in admission_classes %}
-                        <li>{{ admission_class }}</li>
-                    {% endfor %}
-                </ul>
-            </div> -->
-        
-            <!-- <div class="row">
+            <div class="row" id="class_list">
                 <div class="col-md-12 mb-4">
                   <div class="btn-group" role="group">
                     <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="1">Class 7</button>
@@ -43,8 +37,16 @@
                     <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="10">Class 12Arts</button>
                   </div>
                 </div>
+            </div>
+
+            <!-- <div>
+                <p>Classes:</p>
+                <ul>
+                    {% for admission_class in admission_classes %}
+                        <li>{{ admission_class }}</li>
+                    {% endfor %}
+                </ul>
             </div> -->
-            
             <div class="card-body">
               <div class="row">
                   <div class="table-responsive">
@@ -85,16 +87,14 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script>
-var selectedClass = null; // Global variable to store the selected class
-
 $(document).ready(function() {
     loadUsers(); // Initially load all users
-
-    // Add click event handler for class buttons
+    var selectedClass = null; // Global variable to store the selected class
     $('.class-btn').on('click', function() {
         selectedClass = $(this).data('class');
-        loadUsers(selectedClass);
+        loadapplications(selectedClass);
     });
+    // Add click event handler for class buttons
 });
 
 function loadUsers(classFilter) {
@@ -172,5 +172,5 @@ function deleteUser(id) {
     });
 }
 </script>
-
+<!---Making the mini class btn work-->
 {% endblock javascripts %}

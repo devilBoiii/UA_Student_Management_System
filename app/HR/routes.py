@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 from app.HR import blueprint
 from app.admin.service import get_std_slot, is_human_resource, save_subuser_detail_table,save_user_table, save_user_detail_table, all_users, is_admin,is_classTeacher, is_subjectTeacher, get_user_by_id,getClasses,getSection,getSubjects
 # send_application_mailUser
-from app.HR.service import edit_the_user, get_student_fee,class_teacher,subjectTeacher,getModaldetails,assignSection,dropdownHostels, update_editfunction,update_edit_subfunction, save_subTeacher_hr,save_subjectTeacher,past_payment,edit_the_sub_teacher, edit_the_sub_user
+from app.HR.service import edit_the_user, get_student_fee,class_teacher,subjectTeacher,getModaldetails,assignSection,dropdownHostels, update_editfunction,update_edit_subfunction, save_subTeacher_hr,save_subjectTeacher,past_payment,edit_the_sub_teacher, edit_the_sub_user, application_update_hr
 from app.HR.service import deleteUser as __DU__
 from app.HR.service import deleteSubjectUser as __DUU__
 from app.HR.service import deletePastPayments as ___DUU___
@@ -86,9 +86,15 @@ def std_details_hr(id):
         'inner join public.tbl_village_list as village on village.village_id = P.student_village '
         'WHERE P.id =%s',
         id).first()
-    return render_template('/pages/studentinfo.html', std=std_details, std_info=std_info, result=result)
+    return render_template('/pages/studentinfo_hr.html', std=std_details, std_info=std_info, result=result)
 
-
+@blueprint.route('/update-status-hr', methods=['POST'])
+def update_app_status():
+    if is_human_resource():
+        print("Herebro!!_____")
+        return application_update_hr()
+    else:
+        return "Failed"
 
 @blueprint.route('/past_payment')
 @login_required

@@ -14,7 +14,6 @@ from app import mail
 import io
 import re
 
-
 engine = create_engine(Config.SQLALCHEMY_DATABASE_URI)
 connection = engine.connect()
 random_id = randint(000, 999)

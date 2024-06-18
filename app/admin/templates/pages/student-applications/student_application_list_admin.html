@@ -8,7 +8,11 @@
 {% endblock stylesheets %}
 
 {% block content %}
-
+<style>
+    #class_list{
+        padding-left: 2em;
+    }
+</style>
 <!-- partial -->
 <div class="main-panel">
   <div class="content-wrapper">
@@ -28,7 +32,7 @@
                 </ul>
             </div> -->
         
-            <!-- <div class="row">
+            <div class="row" id="class_list">
                 <div class="col-md-12 mb-4">
                   <div class="btn-group" role="group">
                     <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="1">Class 7</button>
@@ -43,8 +47,7 @@
                     <button type="button" class="btn btn-primary class-btn btn-sm m-1" data-class="10">Class 12Arts</button>
                   </div>
                 </div>
-            </div> -->
-            
+            </div>
             <div class="card-body">
               <div class="row">
                   <div class="table-responsive">
@@ -54,6 +57,7 @@
                               <th scope="col" class="sort" data-sort="name">SL</th>
                               <th scope="col" class="sort" data-sort="name">Stduent Code </th>
                               <th scope="col" class="sort" data-sort="budget">CID</th>
+                              <th scope="col" class="sort" data-sort="budget">Class</th>
                               <th scope="col" class="sort" data-sort="name">Student Name</th>
                               <th scope="col" class="sort" data-sort="name">Email</th>
                               <th scope="col" class="sort" data-sort="name">Status</th>
@@ -84,16 +88,14 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script>
-var selectedClass = null; // Global variable to store the selected class
-
 $(document).ready(function() {
     loadUsers(); // Initially load all users
-
-    // Add click event handler for class buttons
+    var selectedClass = null; // Global variable to store the selected class
     $('.class-btn').on('click', function() {
         selectedClass = $(this).data('class');
-        loadUsers(selectedClass);
+        loadapplications(selectedClass);
     });
+    // Add click event handler for class buttons
 });
 
 function loadUsers(classFilter) {
@@ -111,6 +113,7 @@ function loadUsers(classFilter) {
             { data: 'sl' },
             { data: 'student_code' },
             { data: 'student_cid' },
+            { data: 'class' },
             { data: 'first_name' },
             { data: 'student_email' },
             { data: 'status' },
@@ -121,7 +124,7 @@ function loadUsers(classFilter) {
                             '<b>Click</b>' +
                         '</a>' +
                         '<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">' +
-                            '<a class="dropdown-item" href="/std-detials/' + full.id + '">View</a>' +
+                            '<a class="dropdown-item" href="/admin-std-detials/' + full.id + '">View</a>' +
                             '<a class="dropdown-item" href="javascript:void(0)" onclick="deleteUser(\'' + full.id + '\')">Delete</a>' +
                         '</div>' +
                     '</div>'
@@ -170,5 +173,5 @@ function deleteUser(id) {
     });
 }
 </script>
-
+<!---Making the mini class btn work-->
 {% endblock javascripts %}
